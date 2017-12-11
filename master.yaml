@@ -142,25 +142,25 @@ Resources:
         PMVPC:
           Fn::ImportValue: !Sub "${PMEnvVPC}-VPC"
 
-  MyRDS:
-    Type: "AWS::CloudFormation::Stack"
-    Condition: "UseProdEnv"
-    DependsOn:
-    - "MySecurityGroup"
-    Properties:
-      TemplateURL: !Sub "${PMTemplateURL}/wp-rds.yaml"
-      TimeoutInMinutes: '5'
-      Parameters:
-        PMServerEnv: !Ref "AWS::StackName"
-        DatabaseUser: !Ref "PMDatabaseUsername"
-        DatabasePassword: !Ref "PMDatabasePassword"
-        DatabaseName: !Ref "PMDatabaseName"
-        DatabaseSize: !Ref "PMDatabaseSize"
-        DatabaseEngine: !Ref "PMDatabaseEngine"
-        DatabaseInstanceClass: !Ref "PMDatabaseInstanceClass"
-        PMRDSSG: !GetAtt "MySecurityGroup.Outputs.RDSSG"
-        PMPrivateSubnets:
-          Fn::ImportValue: !Sub "${PMEnvVPC}-PrivateSubnets"
+  # MyRDS:
+  #   Type: "AWS::CloudFormation::Stack"
+  #   Condition: "UseProdEnv"
+  #   DependsOn:
+  #   - "MySecurityGroup"
+  #   Properties:
+  #     TemplateURL: !Sub "${PMTemplateURL}/wp-rds.yaml"
+  #     TimeoutInMinutes: '5'
+  #     Parameters:
+  #       PMServerEnv: !Ref "AWS::StackName"
+  #       DatabaseUser: !Ref "PMDatabaseUsername"
+  #       DatabasePassword: !Ref "PMDatabasePassword"
+  #       DatabaseName: !Ref "PMDatabaseName"
+  #       DatabaseSize: !Ref "PMDatabaseSize"
+  #       DatabaseEngine: !Ref "PMDatabaseEngine"
+  #       DatabaseInstanceClass: !Ref "PMDatabaseInstanceClass"
+  #       PMRDSSG: !GetAtt "MySecurityGroup.Outputs.RDSSG"
+  #       PMPrivateSubnets:
+  #         Fn::ImportValue: !Sub "${PMEnvVPC}-PrivateSubnets"
 
 #  MyAPPELB:
 #    Type: "AWS::CloudFormation::Stack"
