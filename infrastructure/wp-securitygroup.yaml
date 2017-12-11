@@ -107,25 +107,24 @@ Resources:
         - Key: "Name"
           Value: !Sub "${PMServerEnv}-APPHostSG"
 
-#   # AppServer Elastic Load Balancer
-#   APPELBSG:
-#     Type: "AWS::EC2::SecurityGroup"
-#     Properties:
-#       GroupDescription: "ELB-APPSG"
-#       SecurityGroupEgress:
-#       - IpProtocol: "-1"
-#         CidrIp: "0.0.0.0/0"
-#       SecurityGroupIngress:
-#         - FromPort: "9000"
-#           IpProtocol: "tcp"
-#           SourceSecurityGroupId:
-#             Ref: "ProxyHostSG"
-#           ToPort: "9000"
-#       VpcId:
-#         Ref: "PMVPC"
-#       Tags:
-#         - Key: "Name"
-#           Value: !Sub "${PMServerEnv}-APPELBSG"
+  # AppServer Elastic Load Balancer
+  APPELBSG:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      VpcId: !Ref "PMVPC"
+      GroupDescription: "ELB-APPSG"
+      SecurityGroupIngress:
+        - FromPort: "9000"
+          ToPort: "9000"
+          IpProtocol: "tcp"
+          SourceSecurityGroupId:
+            Ref: "MyWordpressHostSG"
+      SecurityGroupEgress:
+        - IpProtocol: '-1'
+          CidrIp: '0.0.0.0/0'
+      Tags:
+        - Key: "Name"
+          Value: !Sub "${PMServerEnv}-APPELBSG"
 
 #   # Allow RDS connection from ProxyHostSG only.
 #   RDSSG:
