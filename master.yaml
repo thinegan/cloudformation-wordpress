@@ -24,6 +24,10 @@ Description: >
 
 Parameters: 
 
+  PMEnvVPC:
+    Description: "Stack VPC Environment."
+    Type: "String"
+
   PMOWNIP:
     Description: "Update this with your own office/home public ip address"
     Type: "String"
@@ -103,48 +107,29 @@ Conditions:
 
 Resources:
 
-  # MyIAMRole:
-  #   Type: "AWS::CloudFormation::Stack"
-  #   Properties:
-  #     TemplateURL: !Sub "${PMTemplateURL}/wp-iam.yaml"
-  #     TimeoutInMinutes: '5'
-  #     Parameters:
-  #       PMServerEnv: !Ref "AWS::StackName"
-
-  # MyS3Bucket:
-  #   Type: "AWS::CloudFormation::Stack"
-  #   Properties:
-  #     TemplateURL: !Sub "${PMTemplateURL}/wp-s3bucket.yaml"
-  #     TimeoutInMinutes: '5'
-  #     Parameters:
-  #       PMServerEnv: !Ref "AWS::StackName"
-  #       PMRegionAStorage: !FindInMap ["RegionMap", !Ref "AWS::Region", "AStorage"]
-
-  # MyVPC:
-  #   Type: "AWS::CloudFormation::Stack"
-  #   Properties:
-  #     TemplateURL: !Sub "${PMTemplateURL}/wp-vpc.yaml"
-  #     TimeoutInMinutes: '5'
-  #     Parameters:
-  #       PMServerEnv: !Ref "AWS::StackName"
-  #       PMVpcCIDR: "10.0.0.0/16"
-  #       PMPublicSubnet1CIDR: "10.0.1.0/24"
-  #       PMPublicSubnet2CIDR: "10.0.2.0/24"
-  #       PMPrivateSubnet1CIDR: "10.0.3.0/24"
-  #       PMPrivateSubnet2CIDR: "10.0.4.0/24"
-  #       PMFlowLogRole: !GetAtt "MyIAMRole.Outputs.VPCFlowLogRoleArn"
-
   MySecurityGroup:
     Type: "AWS::CloudFormation::Stack"
-    Conditions: "UseProdEnv"
+    Condition: "UseProdEnv"
     Properties:
       TemplateURL: !Sub "${PMTemplateURL}/wp-securitygroup.yaml"
       TimeoutInMinutes: '5'
       Parameters:
-        PMServerEnv: !Ref "AWS::StackName"
         PMOWNIP: !Ref "PMOWNIP"
-        PMVPC: !GetAtt "MyVPC.Outputs.VPC"
-        PMNACL: !GetAtt "MyVPC.Outputs.MyNetworkACL"
+        PMServerEnv: !Ref "AWS::StackName"
+        PMVPC:
+          Fn::ImportValue: !Sub "${PMEnvVPC}-VPC"
+
+  # MySecurityGroup:
+  #   Type: "AWS::CloudFormation::Stack"
+  #   Conditions: "UseProdEnv"
+  #   Properties:
+  #     TemplateURL: !Sub "${PMTemplateURL}/wp-securitygroup.yaml"
+  #     TimeoutInMinutes: '5'
+  #     Parameters:
+  #       PMServerEnv: !Ref "AWS::StackName"
+  #       PMOWNIP: !Ref "PMOWNIP"
+  #       PMVPC: !GetAtt "MyVPC.Outputs.VPC"
+  #       PMNACL: !GetAtt "MyVPC.Outputs.MyNetworkACL"
 
 
 
