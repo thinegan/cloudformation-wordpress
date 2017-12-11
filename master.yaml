@@ -159,7 +159,8 @@ Resources:
         DatabaseEngine: !Ref "PMDatabaseEngine"
         DatabaseInstanceClass: !Ref "PMDatabaseInstanceClass"
         PMRDSSG: !GetAtt "MySecurityGroup.Outputs.RDSSG"
-        PMPrivateSubnets: !GetAtt "MyVPC.Outputs.PrivateSubnets"
+        PMPrivateSubnets:
+          Fn::ImportValue: !Sub "${PMEnvVPC}-PrivateSubnets"
 
 #  MyAPPELB:
 #    Type: "AWS::CloudFormation::Stack"
