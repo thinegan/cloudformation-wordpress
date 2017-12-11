@@ -126,48 +126,47 @@ Resources:
         - Key: "Name"
           Value: !Sub "${PMServerEnv}-APPELBSG"
 
-#   # Allow RDS connection from ProxyHostSG only.
-#   RDSSG:
-#     Type: "AWS::EC2::SecurityGroup"
-#     Properties:
-#       GroupDescription: "Security group for RDS DB Instance."
-#       SecurityGroupEgress:
-#       - IpProtocol: "-1"
-#         CidrIp: "0.0.0.0/0"
-#       SecurityGroupIngress:
-#       - FromPort: "3306"
-#         IpProtocol: "tcp"
-#         SourceSecurityGroupId:
-#           Ref: "ProxyHostSG"
-#         ToPort: "3306"
-#       VpcId:
-#         Ref: "PMVPC"
-#       Tags:
-#         - Key: "Name"
-#           Value: !Sub "${PMServerEnv}-RDSSG"
+  # Allow RDS connection from ProxyHostSG only.
+  RDSSG:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      VpcId: !Ref "PMVPC"
+      GroupDescription: "Security group for RDS DB Instance."
+      SecurityGroupIngress:
+      - FromPort: "3306"
+        ToPort: "3306"
+        IpProtocol: "tcp"
+        SourceSecurityGroupId:
+          Ref: "MyWordpressHostSG"
+      SecurityGroupEgress:
+        - IpProtocol: '-1'
+          CidrIp: '0.0.0.0/0'
+      Tags:
+        - Key: "Name"
+          Value: !Sub "${PMServerEnv}-RDSSG"
 
-# Outputs:
+Outputs:
 
-#   ProxyHostSG: 
-#     Description: "A reference to the security group for Proxy hosts"
-#     Value: !Ref "ProxyHostSG"
+  MyWordpressHostSG: 
+    Description: "A reference to the security group for Proxy hosts"
+    Value: !Ref "MyWordpressHostSG"
 
-#   WEBELBSG:
-#     Description: "A reference to the security group for Web ELB"
-#     Value: !Ref "WEBELBSG"
+  WEBELBSG:
+    Description: "A reference to the security group for Web ELB"
+    Value: !Ref "WEBELBSG"
 
-#   APPHostSG: 
-#     Description: "A reference to the security group for APP hosts"
-#     Value: !Ref "APPHostSG"
+  APPHostSG: 
+    Description: "A reference to the security group for APP hosts"
+    Value: !Ref "APPHostSG"
 
-#   APPELBSG:
-#     Description: "A reference to the security group for Application ELB"
-#     Value: !Ref "APPELBSG"
+  APPELBSG:
+    Description: "A reference to the security group for Application ELB"
+    Value: !Ref "APPELBSG"
 
-#   RDSSG:
-#     Description: "A reference to the security group for RDS"
-#     Value: !Ref "RDSSG"
-#     Export:
-#       Name: !Sub "${PMServerEnv}-RDSSG"
+  RDSSG:
+    Description: "A reference to the security group for RDS"
+    Value: !Ref "RDSSG"
+    Export:
+      Name: !Sub "${PMServerEnv}-RDSSG"
 
 
