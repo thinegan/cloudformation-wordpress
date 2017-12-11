@@ -119,21 +119,6 @@ Resources:
         PMVPC:
           Fn::ImportValue: !Sub "${PMEnvVPC}-VPC"
 
-  # MySecurityGroup:
-  #   Type: "AWS::CloudFormation::Stack"
-  #   Conditions: "UseProdEnv"
-  #   Properties:
-  #     TemplateURL: !Sub "${PMTemplateURL}/wp-securitygroup.yaml"
-  #     TimeoutInMinutes: '5'
-  #     Parameters:
-  #       PMServerEnv: !Ref "AWS::StackName"
-  #       PMOWNIP: !Ref "PMOWNIP"
-  #       PMVPC: !GetAtt "MyVPC.Outputs.VPC"
-  #       PMNACL: !GetAtt "MyVPC.Outputs.MyNetworkACL"
-
-
-
-
 
 #  MyRDS:
 #    Type: "AWS::CloudFormation::Stack"

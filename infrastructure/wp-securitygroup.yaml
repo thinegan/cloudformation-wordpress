@@ -81,31 +81,31 @@ Resources:
         - Key: "Name"
           Value: !Sub "${PMServerEnv}-WEBELBSG"
 
-#   # App Server Security Group
-#   # PHP-fpm (port 9000)
-#   APPHostSG:
-#     Type: "AWS::EC2::SecurityGroup"
-#     Properties: 
-#       VpcId: !Ref "PMVPC"
-#       GroupDescription: "Application Server Security Group"
-#       SecurityGroupIngress:
-#         # This is private subnet, so you can only able to ssh once you're inside 
-#         # the public subnet host (E.g. Bastion Host).
-#         - CidrIp: "0.0.0.0/0"
-#           FromPort: "22"
-#           IpProtocol: "tcp"
-#           ToPort: "22"
-#         - FromPort: "9000"
-#           IpProtocol: "tcp"
-#           SourceSecurityGroupId:
-#             Ref: "APPELBSG"
-#           ToPort: "9000"
-#       SecurityGroupEgress:
-#         - IpProtocol: '-1'
-#           CidrIp: '0.0.0.0/0'
-#       Tags:
-#         - Key: "Name"
-#           Value: !Sub "${PMServerEnv}-APPHostSG"
+  # App Server Security Group
+  # PHP-fpm (port 9000)
+  APPHostSG:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties: 
+      VpcId: !Ref "PMVPC"
+      GroupDescription: "Application Server Security Group"
+      SecurityGroupIngress:
+        # This is private subnet, so you can only able to ssh once you're inside 
+        # the public subnet host (E.g. Bastion Host).
+        - FromPort: "22"
+          ToPort: "22"
+          IpProtocol: "tcp"
+          CidrIp: "0.0.0.0/0"
+        - FromPort: "9000"
+          ToPort: "9000"
+          IpProtocol: "tcp"
+          SourceSecurityGroupId:
+            Ref: "APPELBSG"
+      SecurityGroupEgress:
+        - IpProtocol: '-1'
+          CidrIp: '0.0.0.0/0'
+      Tags:
+        - Key: "Name"
+          Value: !Sub "${PMServerEnv}-APPHostSG"
 
 #   # AppServer Elastic Load Balancer
 #   APPELBSG:
