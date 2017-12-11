@@ -96,41 +96,47 @@ Mappings:
 
 ###############################################################################################################
 
+####### Condition Setup #######
+Conditions:
+  UseProdEnv: !Equals [ !Ref "PMInstanceType", "prod" ]
+
+
 Resources:
 
-  MyIAMRole:
-    Type: "AWS::CloudFormation::Stack"
-    Properties:
-      TemplateURL: !Sub "${PMTemplateURL}/wp-iam.yaml"
-      TimeoutInMinutes: '5'
-      Parameters:
-        PMServerEnv: !Ref "AWS::StackName"
+  # MyIAMRole:
+  #   Type: "AWS::CloudFormation::Stack"
+  #   Properties:
+  #     TemplateURL: !Sub "${PMTemplateURL}/wp-iam.yaml"
+  #     TimeoutInMinutes: '5'
+  #     Parameters:
+  #       PMServerEnv: !Ref "AWS::StackName"
 
-  MyS3Bucket:
-    Type: "AWS::CloudFormation::Stack"
-    Properties:
-      TemplateURL: !Sub "${PMTemplateURL}/wp-s3bucket.yaml"
-      TimeoutInMinutes: '5'
-      Parameters:
-        PMServerEnv: !Ref "AWS::StackName"
-        PMRegionAStorage: !FindInMap ["RegionMap", !Ref "AWS::Region", "AStorage"]
+  # MyS3Bucket:
+  #   Type: "AWS::CloudFormation::Stack"
+  #   Properties:
+  #     TemplateURL: !Sub "${PMTemplateURL}/wp-s3bucket.yaml"
+  #     TimeoutInMinutes: '5'
+  #     Parameters:
+  #       PMServerEnv: !Ref "AWS::StackName"
+  #       PMRegionAStorage: !FindInMap ["RegionMap", !Ref "AWS::Region", "AStorage"]
 
-  MyVPC:
-    Type: "AWS::CloudFormation::Stack"
-    Properties:
-      TemplateURL: !Sub "${PMTemplateURL}/wp-vpc.yaml"
-      TimeoutInMinutes: '5'
-      Parameters:
-        PMServerEnv: !Ref "AWS::StackName"
-        PMVpcCIDR: "10.0.0.0/16"
-        PMPublicSubnet1CIDR: "10.0.1.0/24"
-        PMPublicSubnet2CIDR: "10.0.2.0/24"
-        PMPrivateSubnet1CIDR: "10.0.3.0/24"
-        PMPrivateSubnet2CIDR: "10.0.4.0/24"
-        PMFlowLogRole: !GetAtt "MyIAMRole.Outputs.VPCFlowLogRoleArn"
+  # MyVPC:
+  #   Type: "AWS::CloudFormation::Stack"
+  #   Properties:
+  #     TemplateURL: !Sub "${PMTemplateURL}/wp-vpc.yaml"
+  #     TimeoutInMinutes: '5'
+  #     Parameters:
+  #       PMServerEnv: !Ref "AWS::StackName"
+  #       PMVpcCIDR: "10.0.0.0/16"
+  #       PMPublicSubnet1CIDR: "10.0.1.0/24"
+  #       PMPublicSubnet2CIDR: "10.0.2.0/24"
+  #       PMPrivateSubnet1CIDR: "10.0.3.0/24"
+  #       PMPrivateSubnet2CIDR: "10.0.4.0/24"
+  #       PMFlowLogRole: !GetAtt "MyIAMRole.Outputs.VPCFlowLogRoleArn"
 
   MySecurityGroup:
     Type: "AWS::CloudFormation::Stack"
+    Conditions: "UseProdEnv"
     Properties:
       TemplateURL: !Sub "${PMTemplateURL}/wp-securitygroup.yaml"
       TimeoutInMinutes: '5'
