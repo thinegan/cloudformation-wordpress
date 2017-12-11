@@ -17,7 +17,7 @@ Description: >
     - Internet Gateway, with a default route on the public subnets.
     - NAT Gateways (In one Public AZ) and route to private subnets.
 
-    Last Modified: 4th May 2017
+    Last Modified: 11th Dec 2017
     Author: Thinegan Ratnam <thinegan@thinegan.com>
 
 ###############################################################################################################
@@ -25,29 +25,24 @@ Description: >
 Parameters: 
 
   PMOWNIP:
-    Default: "0.0.0.0/0"
     Description: "Update this with your own office/home public ip address"
     Type: "String"
 
   PMKeyName:
-    Default: "MyEC2Key"
-    Description: "Enter an existing EC2 KeyPair. Default is MyEC2Key."
+    Description: "Enter an existing EC2 KeyPair."
     Type: "String" 
 
   PMTemplateURL:
-    Default: "https://s3-ap-southeast-1.amazonaws.com/cf-templates-19sg5y0d6d084-ap-southeast-1"
     Description: "Enter an existing S3 Cloudformation Bucket."
     Type: "String"
 
   PMHostedZone:
-    Default: "kasturicookies.com"
     Description: "Enter an existing Hosted Zone."
     Type: "String"
 
   PMInstanceType: 
     Description: "Enter t2.micro or m1.small. Default is t2.micro."
     Type: "String"
-    Default: "t2.micro"
     AllowedValues: 
       - "t2.micro"
       - "m1.small"
