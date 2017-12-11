@@ -109,7 +109,7 @@ Resources:
 
   MySecurityGroup:
     Type: "AWS::CloudFormation::Stack"
-    Condition: "UseProdEnv"
+    # Condition: "UseProdEnv"
     Properties:
       TemplateURL: !Sub "${PMTemplateURL}/wp-securitygroup.yaml"
       TimeoutInMinutes: '5'
