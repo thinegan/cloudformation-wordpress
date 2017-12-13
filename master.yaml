@@ -164,7 +164,7 @@ Resources:
 
   MyAPPELB:
     Type: "AWS::CloudFormation::Stack"
-    Condition: "UseProdEnv"
+    # Condition: "UseProdEnv"
     DependsOn:
     - "MyRDS"
     Properties:
