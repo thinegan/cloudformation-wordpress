@@ -14,10 +14,6 @@ Parameters:
     Description: "Server Environment name."
     ConstraintDescription: "Choose an Environment from the drop down"
     Type: "String"
-    AllowedValues: 
-      - "dev"
-      - "staging"
-      - "prod"
 
   PMKeyName:
     Description: "Enter an existing EC2 KeyPair. Default is MyEC2Key"
@@ -26,9 +22,6 @@ Parameters:
   PMInstanceType: 
     Description: "Enter t2.micro or m1.small. Default is t2.micro."
     Type: "String"
-    AllowedValues: 
-      - "t2.micro"
-      - "m1.small"
 
   PMPublicSubnets:
     Description: "Subnets to launch instances into"

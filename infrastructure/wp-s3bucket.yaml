@@ -22,10 +22,6 @@ Parameters:
     Description: "Server Environment name."
     ConstraintDescription: "Choose an Environment from the drop down"
     Type: "String"
-    AllowedValues: 
-      - "dev"
-      - "staging"
-      - "prod"
 
 
 Resources:
@@ -63,47 +59,7 @@ Resources:
           Principal:
             AWS: "*"
 
-  ############################################################################
-  # S3 Logging Bucket Data Encrypted Bucket
-  # https://forums.aws.amazon.com/thread.jspa?threadID=221113
-  # Note : at this time ELB logging does not support server side encryption
-  ############################################################################
-
-  S3Logging:
-    Type: "AWS::S3::Bucket"
-    Properties:
-      AccessControl: "Private"
-      VersioningConfiguration:
-        Status: "Enabled"
-      LifecycleConfiguration:
-        Rules:
-        - Id: "MyLoggingArchive"
-          Status: "Enabled"
-          ExpirationInDays: '365' # Complete Disposal/Deletion of Data after 1 year
-          Transition:
-            TransitionInDays: '60' # Move Data from S3 bucket to Infrequent Archive after 60 days.
-            StorageClass: !Ref "PMRegionAStorage"
-    DeletionPolicy: "Retain"
-
-  S3LoggingPolicy:
-    Type: "AWS::S3::BucketPolicy"
-    Properties:
-      Bucket: !Ref "S3Logging"
-      PolicyDocument:
-        Statement:
-        - Sid: "AllowLogsObjectUploads"
-          Effect: "Allow"
-          Action: "s3:PutObject"
-          Resource: !Join ["", ["arn:aws:s3:::", !Ref "S3Logging", "/*"]]
-          Principal:
-            AWS: "*"
-
-
 Outputs:
-
-  S3Logging:
-    Description: "S3 Logging Bucket Name"
-    Value: !Ref "S3Logging"
 
   S3Backup:
     Description: "S3 Backup Bucket Name"
