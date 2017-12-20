@@ -13,10 +13,6 @@ Parameters:
     Description: "Server Environment name."
     ConstraintDescription: "Invalid environment name. Choose an environment from the list"
     Type: "String"
-    AllowedValues: 
-      - "dev"
-      - "staging"
-      - "prod"
 
 Resources:
 
@@ -50,47 +46,47 @@ Resources:
           Ref: "IAMS3CW"
 
 
-  IAMVPCLog:
-    Type: "AWS::IAM::Role"
-    Properties:
-      RoleName: !Sub "${PMServerEnv}-VPCLog"
-      # Update Inline or Custom Policy
-      Policies:
-        - 
-          PolicyName: "Custom-VPC-Log"
-          PolicyDocument: 
-            Version: "2012-10-17"
-            Statement: 
-              - 
-                Effect: "Allow"
-                Action:
-                - "logs:CreateLogGroup"
-                - "logs:CreateLogStream"
-                - "logs:PutLogEvents"
-                - "logs:DescribeLogGroups"
-                - "logs:DescribeLogStreams"
-                Resource: "*"
-      AssumeRolePolicyDocument: 
-        Version: "2012-10-17"
-        Statement: 
-          - 
-            Effect: "Allow"
-            Principal: 
-              Service: 
-                - "vpc-flow-logs.amazonaws.com"
-            Action: 
-              - "sts:AssumeRole"
-      Path: "/"
+  # IAMVPCLog:
+  #   Type: "AWS::IAM::Role"
+  #   Properties:
+  #     RoleName: !Sub "${PMServerEnv}-VPCLog"
+  #     # Update Inline or Custom Policy
+  #     Policies:
+  #       - 
+  #         PolicyName: "Custom-VPC-Log"
+  #         PolicyDocument: 
+  #           Version: "2012-10-17"
+  #           Statement: 
+  #             - 
+  #               Effect: "Allow"
+  #               Action:
+  #               - "logs:CreateLogGroup"
+  #               - "logs:CreateLogStream"
+  #               - "logs:PutLogEvents"
+  #               - "logs:DescribeLogGroups"
+  #               - "logs:DescribeLogStreams"
+  #               Resource: "*"
+  #     AssumeRolePolicyDocument: 
+  #       Version: "2012-10-17"
+  #       Statement: 
+  #         - 
+  #           Effect: "Allow"
+  #           Principal: 
+  #             Service: 
+  #               - "vpc-flow-logs.amazonaws.com"
+  #           Action: 
+  #             - "sts:AssumeRole"
+  #     Path: "/"
 
-  # AWS::IAM::InstanceProfile
-  # Creates an AWS Identity and Access Management (IAM) Instance Profile that can be used with IAM Roles for EC2 Instances.
-  IAMVPCLogInstanceProfile: 
-    Type: "AWS::IAM::InstanceProfile"
-    Properties: 
-      Path: "/"
-      Roles: 
-        - 
-          Ref: "IAMVPCLog"
+  # # AWS::IAM::InstanceProfile
+  # # Creates an AWS Identity and Access Management (IAM) Instance Profile that can be used with IAM Roles for EC2 Instances.
+  # IAMVPCLogInstanceProfile: 
+  #   Type: "AWS::IAM::InstanceProfile"
+  #   Properties: 
+  #     Path: "/"
+  #     Roles: 
+  #       - 
+  #         Ref: "IAMVPCLog"
 
 
 Outputs:
@@ -103,12 +99,12 @@ Outputs:
     Description: "Policy to Allow EC2 VPC Logs to CloudWatch"
     Value: !Ref "IAMVPCLogInstanceProfile"
     
-  VPCFlowLogRoleArn:
-    Description: "Arn VPC Logs to CloudWatch"
-    Value:
-      Fn::GetAtt:
-      - "IAMVPCLog"
-      - "Arn"
+  # VPCFlowLogRoleArn:
+  #   Description: "Arn VPC Logs to CloudWatch"
+  #   Value:
+  #     Fn::GetAtt:
+  #     - "IAMVPCLog"
+  #     - "Arn"
 
 
 
