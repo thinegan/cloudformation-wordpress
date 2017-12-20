@@ -146,9 +146,9 @@ Resources:
   MyS3Bucket:
     Type: "AWS::CloudFormation::Stack"
     # Condition: "UseProdEnv"
-     DependsOn:
+    DependsOn:
     - "MyIAMRole"
-   Properties:
+    Properties:
       TemplateURL: !Sub "${PMTemplateURL}/wp-s3bucket.yaml"
       TimeoutInMinutes: '5'
       Parameters:
