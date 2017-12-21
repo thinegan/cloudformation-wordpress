@@ -205,30 +205,29 @@ Resources:
         PMPublicSubnets:
           Fn::ImportValue: !Sub "${PMEnvVPC}-PublicSubnets"
 
-  # MyAPPAutoScaling:
-  #   Type: "AWS::CloudFormation::Stack"
-  #   Condition: "UseProdEnv"
-  #   DependsOn:
-  #   - "MyAPPELB"
-  #   Properties:
-  #     TemplateURL: !Sub "${PMTemplateURL}/wp-autoscaling-appserver.yaml"
-  #     TimeoutInMinutes: '5'
-  #     Parameters:
-  #       PMServerEnv: !Ref "AWS::StackName"
-  #       PMKeyName: !Ref "PMKeyName"
-  #       PMInstanceType: !Ref "PMInstanceType"
-  #       PMRegionAMI: !Ref "PMRegionAMI"
-  #       #  PMRegionAMI: !FindInMap ["RegionMap", !Ref "AWS::Region", "AMI"]
-  #       PMAPPHostSG : !GetAtt "MySecurityGroup.Outputs.APPHostSG"
-  #       PMAPPLoadBalancer: !GetAtt "MyAPPELB.Outputs.APPLoadBalancer"
-  #       PMS3Backup: !GetAtt "MyS3Bucket.Outputs.S3Backup"
-  #       PMIAMS3CWInstanceProfile: !GetAtt "MyIAMRole.Outputs.IAMS3CWInstanceProfile"
-  #       PMPrivateSubnets: !GetAtt "MyVPC.Outputs.PrivateSubnets"
-  #       PMPublicSubnets: !GetAtt "MyVPC.Outputs.PublicSubnets"
-  #       PMASMIN: !FindInMap ["EnvMap", !Ref "AWS::StackName", "ASMIN"]
-  #       PMASMAX: !FindInMap ["EnvMap", !Ref "AWS::StackName", "ASMAX"]
-  #       PMASDES: !FindInMap ["EnvMap", !Ref "AWS::StackName", "ASDES"]
-  #       PMWEBDOMAIN: !FindInMap ["EnvMap", !Ref "AWS::StackName", "WEBDOMAIN"]
+  MyAPPAutoScaling:
+    Type: "AWS::CloudFormation::Stack"
+    Condition: "UseProdEnv"
+    DependsOn:
+    - "MyAPPELB"
+    Properties:
+      TemplateURL: !Sub "${PMTemplateURL}/wp-autoscaling-appserver.yaml"
+      TimeoutInMinutes: '5'
+      Parameters:
+        PMServerEnv: !Ref "AWS::StackName"
+        PMKeyName: !Ref "PMKeyName"
+        PMInstanceType: !Ref "PMInstanceType"
+        PMRegionAMI: !Ref "PMRegionAMI"
+        PMAPPHostSG : !GetAtt "MySecurityGroup.Outputs.APPHostSG"
+        PMAPPLoadBalancer: !GetAtt "MyAPPELB.Outputs.APPLoadBalancer"
+        PMS3Backup: !GetAtt "MyS3Bucket.Outputs.S3Backup"
+        PMIAMS3CWInstanceProfile: !GetAtt "MyIAMRole.Outputs.IAMS3CWInstanceProfile"
+        PMPrivateSubnets: !GetAtt "MyVPC.Outputs.PrivateSubnets"
+        PMPublicSubnets: !GetAtt "MyVPC.Outputs.PublicSubnets"
+        PMASMIN: !FindInMap ["EnvMap", !Ref "AWS::StackName", "ASMIN"]
+        PMASMAX: !FindInMap ["EnvMap", !Ref "AWS::StackName", "ASMAX"]
+        PMASDES: !FindInMap ["EnvMap", !Ref "AWS::StackName", "ASDES"]
+        PMWEBDOMAIN: !FindInMap ["EnvMap", !Ref "AWS::StackName", "WEBDOMAIN"]
 
 #  MyWEBELB:
 #    Type: "AWS::CloudFormation::Stack"
