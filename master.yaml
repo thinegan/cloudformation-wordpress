@@ -44,6 +44,10 @@ Parameters:
     Description: "Enter an existing Hosted Zone."
     Type: "String"
 
+  PMWEBDOMAIN:
+    Description: "Enter a web domain."
+    Type: "String"
+
   PMInstanceType: 
     Description: "Enter t2.micro or m1.small. Default is t2.micro."
     Type: "String"
@@ -90,21 +94,18 @@ Mappings:
       ASMIN: '2'
       ASMAX: '3'
       ASDES: '2'
-      WEBDOMAIN: "dev.kasturicookies.com"
       CDNDOMAIN: "devel.kasturicookies.com"
 
     staging:
       ASMIN: '2'
       ASMAX: '3'
       ASDES: '2'
-      WEBDOMAIN: "staging.kasturicookies.com"
       CDNDOMAIN: "static.kasturicookies.com"
 
     prod:
       ASMIN: '2'
       ASMAX: '5'
       ASDES: '2'
-      WEBDOMAIN: "www.kasturicookies.com"
       CDNDOMAIN: "cdn.kasturicookies.com"
 
   RegionMap:
