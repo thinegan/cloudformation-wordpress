@@ -246,7 +246,9 @@ Resources:
         PMServerEnv: !Ref "AWS::StackName"
         PMCertARN: !Ref "PMCertARN"
         PMWEBELBSG: !GetAtt "MySecurityGroup.Outputs.WEBELBSG"
-        PMPublicSubnets: !GetAtt "MyVPC.Outputs.PublicSubnets"
+        PMPublicSubnets:
+          Fn::ImportValue: !Sub "${PMEnvVPC}-PublicSubnets"
+        # PMPublicSubnets: !GetAtt "MyVPC.Outputs.PublicSubnets"
         PMS3Logging: !GetAtt "MyS3Bucket.Outputs.S3Logging"
 #
 #  MyWEBAutoScaling:
