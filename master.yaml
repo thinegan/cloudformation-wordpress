@@ -223,8 +223,6 @@ Resources:
         PMAPPLoadBalancer: !GetAtt "MyAPPELB.Outputs.APPLoadBalancer"
         PMS3Backup: !GetAtt "MyS3Bucket.Outputs.S3Backup"
         PMIAMS3CWInstanceProfile: !GetAtt "MyIAMRole.Outputs.IAMS3CWInstanceProfile"
-        # PMPrivateSubnets: !GetAtt "MyVPC.Outputs.PrivateSubnets"
-        # PMPublicSubnets: !GetAtt "MyVPC.Outputs.PublicSubnets"
         PMPrivateSubnets:
           Fn::ImportValue: !Sub "${PMEnvVPC}-PrivateSubnets"
         PMPublicSubnets:
@@ -232,7 +230,6 @@ Resources:
         PMASMIN: !FindInMap ["EnvMap", !Ref "AWS::StackName", "ASMIN"]
         PMASMAX: !FindInMap ["EnvMap", !Ref "AWS::StackName", "ASMAX"]
         PMASDES: !FindInMap ["EnvMap", !Ref "AWS::StackName", "ASDES"]
-        # PMWEBDOMAIN: !FindInMap ["EnvMap", !Ref "AWS::StackName", "WEBDOMAIN"]
         PMWEBDOMAIN: !Ref "PMWEBDOMAIN"
 
 #  MyWEBELB:
