@@ -114,20 +114,15 @@ Mappings:
   RegionMap:
     # US,North Virginia
     us-east-1:
-      PMKeyName: "MyKey-Virginia"
-      # AMI Instance - Amazon Linux AMI 2016.09.1 (HVM), SSD Volume Type - ami-dc9339bf (Free tier eligible)
-      AMI: "ami-c58c1dd3"
       # AStorage - The storage class to which you want the object to transition.
-      AStorage: "GLACIER"
+      # AStorage: "GLACIER"
       # Update with your own cert ARN HERE!
       # Assuming you have already upload to AWS Certificate Manager
       CertARN: "arn:aws:acm:us-east-1:370888776060:certificate/eec1f4f2-2632-4d20-bd8a-fbfbcdb15920"
 
     # Singapore
     ap-southeast-1:
-      PMKeyName: "MyEC2Key"
-      AMI: "ami-fc5ae39f"
-      AStorage: "STANDARD_IA"
+      # AStorage: "STANDARD_IA"
       CertARN: "arn:aws:acm:ap-southeast-1:370888776060:certificate/b06aa290-bb09-4fee-9e09-864c4cc8cc98"
 
 ###############################################################################################################
@@ -235,19 +230,19 @@ Resources:
         PMASDES: !Ref "PMASDES" # Desired AutoScaling
         PMWEBDOMAIN: !Ref "PMWEBDOMAIN"
 
-#  MyWEBELB:
-#    Type: "AWS::CloudFormation::Stack"
-#    DependsOn:
-#    - "MyAPPAutoScaling"
-#    Properties:
-#      TemplateURL: !Sub "${PMTemplateURL}/wp-elb-webserver.yaml"
-#      TimeoutInMinutes: '5'
-#      Parameters:
-#        PMServerEnv: !Ref "AWS::StackName"
-#        PMDomain1CertARN: !FindInMap ["RegionMap", !Ref "AWS::Region", "CertARN"]
-#        PMWEBELBSG: !GetAtt "MySecurityGroup.Outputs.WEBELBSG"
-#        PMPublicSubnets: !GetAtt "MyVPC.Outputs.PublicSubnets"
-#        PMS3Logging: !GetAtt "MyS3Bucket.Outputs.S3Logging"
+  MyWEBELB:
+    Type: "AWS::CloudFormation::Stack"
+    DependsOn:
+    - "MyAPPAutoScaling"
+    Properties:
+      TemplateURL: !Sub "${PMTemplateURL}/wp-elb-webserver.yaml"
+      TimeoutInMinutes: '5'
+      Parameters:
+        PMServerEnv: !Ref "AWS::StackName"
+        PMDomain1CertARN: !FindInMap ["RegionMap", !Ref "AWS::Region", "CertARN"]
+        PMWEBELBSG: !GetAtt "MySecurityGroup.Outputs.WEBELBSG"
+        PMPublicSubnets: !GetAtt "MyVPC.Outputs.PublicSubnets"
+        PMS3Logging: !GetAtt "MyS3Bucket.Outputs.S3Logging"
 #
 #  MyWEBAutoScaling:
 #    Type: "AWS::CloudFormation::Stack"
