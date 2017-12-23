@@ -30,7 +30,7 @@ Parameters:
     Description: "S3 Logging Bucket Name"
     Type: "String"
 
-  PMDomain1CertARN:
+  PMCertARN:
     Description: "ARN for my domain name"
     Type: "String"
 
@@ -64,7 +64,7 @@ Resources:
         Protocol: "HTTPS"
         InstancePort: '80'
         InstanceProtocol: "HTTP"
-        SSLCertificateId: !Ref "PMDomain1CertARN"
+        SSLCertificateId: !Ref "PMCertARN"
         PolicyNames:
         - !Sub "${PMServerEnv}-SSLNegotiationPolicy"
       # List aws elb describe-load-balancer-policies

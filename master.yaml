@@ -237,6 +237,7 @@ Resources:
 
   MyWEBELB:
     Type: "AWS::CloudFormation::Stack"
+    Condition: "UseProdEnv"
     DependsOn:
     - "MyAPPAutoScaling"
     Properties:
