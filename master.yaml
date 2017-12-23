@@ -68,6 +68,10 @@ Parameters:
     Description: "Desired Autoscaling Requirement"
     Type: "String"
 
+  PMCertARN:
+    Description: "Domain TLS/SSL Cert in ARN"
+    Type: "String"
+
   PMRegionAStorage: 
     Description: "Archive Storage"
     Type: "String"
@@ -118,12 +122,13 @@ Mappings:
       # AStorage: "GLACIER"
       # Update with your own cert ARN HERE!
       # Assuming you have already upload to AWS Certificate Manager
-      CertARN: "arn:aws:acm:us-east-1:370888776060:certificate/eec1f4f2-2632-4d20-bd8a-fbfbcdb15920"
+      #CertARN: "arn:aws:acm:us-east-1:370888776060:certificate/eec1f4f2-2632-4d20-bd8a-fbfbcdb15920"
+      #arn:aws:acm:us-east-1:210406761874:certificate/6e8e02b1-bce8-43f3-9e00-23050cd6f1ff
 
     # Singapore
     ap-southeast-1:
       # AStorage: "STANDARD_IA"
-      CertARN: "arn:aws:acm:ap-southeast-1:370888776060:certificate/b06aa290-bb09-4fee-9e09-864c4cc8cc98"
+      #CertARN: "arn:aws:acm:ap-southeast-1:370888776060:certificate/b06aa290-bb09-4fee-9e09-864c4cc8cc98"
 
 ###############################################################################################################
 
@@ -239,7 +244,7 @@ Resources:
       TimeoutInMinutes: '5'
       Parameters:
         PMServerEnv: !Ref "AWS::StackName"
-        PMDomain1CertARN: !FindInMap ["RegionMap", !Ref "AWS::Region", "CertARN"]
+        PMCertARN: !Ref "PMCertARN"
         PMWEBELBSG: !GetAtt "MySecurityGroup.Outputs.WEBELBSG"
         PMPublicSubnets: !GetAtt "MyVPC.Outputs.PublicSubnets"
         PMS3Logging: !GetAtt "MyS3Bucket.Outputs.S3Logging"
