@@ -40,7 +40,7 @@ Resources:
           Status: "Enabled"
           ExpirationInDays: '365' # Complete Disposal/Deletion of Data after 1 year
           Transition:
-            TransitionInDays: '60' # Move Data from S3 bucket to Infrequent Archive after 60 days.
+            TransitionInDays: '60' # Move Data from S3 bucket to Infrequent Archive/Glacier after 60 days.
             StorageClass: !Ref "PMRegionAStorage"
     DeletionPolicy: "Retain"
 

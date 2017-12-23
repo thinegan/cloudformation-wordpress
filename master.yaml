@@ -56,6 +56,18 @@ Parameters:
     Description: "Enter AMI"
     Type: "String"
 
+  PMASMIN:
+    Description: "Minimum Autoscaling Requirement"
+    Type: "String"
+
+  PMASMAX:
+    Description: "Maximum Autoscaling Requirement"
+    Type: "String"
+
+  PMASDES:
+    Description: "Desired Autoscaling Requirement"
+    Type: "String"
+
   PMRegionAStorage: 
     Description: "Archive Storage"
     Type: "String"
@@ -227,9 +239,12 @@ Resources:
           Fn::ImportValue: !Sub "${PMEnvVPC}-PrivateSubnets"
         PMPublicSubnets:
           Fn::ImportValue: !Sub "${PMEnvVPC}-PublicSubnets"
-        PMASMIN: !FindInMap ["EnvMap", !Ref "AWS::StackName", "ASMIN"]
-        PMASMAX: !FindInMap ["EnvMap", !Ref "AWS::StackName", "ASMAX"]
-        PMASDES: !FindInMap ["EnvMap", !Ref "AWS::StackName", "ASDES"]
+        PMASMIN: !Ref "PMASMIN" # Minimum AutoScaling
+        PMASMAX: !Ref "PMASMAX" # Maximum AutoScaling
+        PMASDES: !Ref "PMASDES" # Desired AutoScaling
+        # PMASMIN: !FindInMap ["EnvMap", !Ref "AWS::StackName", "ASMIN"]
+        # PMASMAX: !FindInMap ["EnvMap", !Ref "AWS::StackName", "ASMAX"]
+        # PMASDES: !FindInMap ["EnvMap", !Ref "AWS::StackName", "ASDES"]
         PMWEBDOMAIN: !Ref "PMWEBDOMAIN"
 
 #  MyWEBELB:
