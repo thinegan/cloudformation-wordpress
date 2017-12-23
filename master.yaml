@@ -103,21 +103,12 @@ Mappings:
   EnvMap:
 
     dev:
-      ASMIN: '2'
-      ASMAX: '3'
-      ASDES: '2'
       CDNDOMAIN: "devel.kasturicookies.com"
 
     staging:
-      ASMIN: '2'
-      ASMAX: '3'
-      ASDES: '2'
       CDNDOMAIN: "static.kasturicookies.com"
 
     prod:
-      ASMIN: '2'
-      ASMAX: '5'
-      ASDES: '2'
       CDNDOMAIN: "cdn.kasturicookies.com"
 
   RegionMap:
@@ -242,9 +233,6 @@ Resources:
         PMASMIN: !Ref "PMASMIN" # Minimum AutoScaling
         PMASMAX: !Ref "PMASMAX" # Maximum AutoScaling
         PMASDES: !Ref "PMASDES" # Desired AutoScaling
-        # PMASMIN: !FindInMap ["EnvMap", !Ref "AWS::StackName", "ASMIN"]
-        # PMASMAX: !FindInMap ["EnvMap", !Ref "AWS::StackName", "ASMAX"]
-        # PMASDES: !FindInMap ["EnvMap", !Ref "AWS::StackName", "ASDES"]
         PMWEBDOMAIN: !Ref "PMWEBDOMAIN"
 
 #  MyWEBELB:
