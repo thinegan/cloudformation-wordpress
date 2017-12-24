@@ -252,28 +252,28 @@ Resources:
         # PMPublicSubnets: !GetAtt "MyVPC.Outputs.PublicSubnets"
         PMS3Logging: !GetAtt "MyS3Bucket.Outputs.S3Logging"
 
-  # MyWEBAutoScaling:
-  #   Type: "AWS::CloudFormation::Stack"
-  #   DependsOn:
-  #   - "MyWEBELB"
-  #   Properties:
-  #     TemplateURL: !Sub "${PMTemplateURL}/wp-autoscaling-webserver.yaml"
-  #     TimeoutInMinutes: '5'
-  #     Parameters:
-  #       PMServerEnv: !Ref "AWS::StackName"
-  #       PMKeyName: !Ref "PMKeyName"
-  #       PMInstanceType: !Ref "PMInstanceType"
-  #       PMRegionAMI: !Ref "PMRegionAMI"
-  #       PMAPPHostSG : !GetAtt "MySecurityGroup.Outputs.MyWordpressHostSG"
-  #       PMWEBLoadBalancer: !GetAtt "MyWEBELB.Outputs.WEBLoadBalancer"
-  #       PMIAMS3CWInstanceProfile: !GetAtt "MyIAMRole.Outputs.IAMS3CWInstanceProfile"
-  #       PMPublicSubnets: !GetAtt "MyVPC.Outputs.PublicSubnets"
-  #       PMS3Backup: !GetAtt "MyS3Bucket.Outputs.S3Backup"
-  #       PMAPPLoadBalancerUrl: !GetAtt "MyAPPELB.Outputs.APPLoadBalancerUrl"
-  #       PMASMIN: !Ref "PMASMIN" # Minimum AutoScaling
-  #       PMASMAX: !Ref "PMASMAX" # Maximum AutoScaling
-  #       PMASDES: !Ref "PMASDES" # Desired AutoScaling
-  #       PMWEBDOMAIN: !Ref "PMWEBDOMAIN"
+  MyWEBAutoScaling:
+    Type: "AWS::CloudFormation::Stack"
+    DependsOn:
+    - "MyWEBELB"
+    Properties:
+      TemplateURL: !Sub "${PMTemplateURL}/wp-autoscaling-webserver.yaml"
+      TimeoutInMinutes: '5'
+      Parameters:
+        PMServerEnv: !Ref "AWS::StackName"
+        PMKeyName: !Ref "PMKeyName"
+        PMInstanceType: !Ref "PMInstanceType"
+        PMRegionAMI: !Ref "PMRegionAMI"
+        PMAPPHostSG : !GetAtt "MySecurityGroup.Outputs.MyWordpressHostSG"
+        PMWEBLoadBalancer: !GetAtt "MyWEBELB.Outputs.WEBLoadBalancer"
+        PMIAMS3CWInstanceProfile: !GetAtt "MyIAMRole.Outputs.IAMS3CWInstanceProfile"
+        PMPublicSubnets: !GetAtt "MyVPC.Outputs.PublicSubnets"
+        PMS3Backup: !GetAtt "MyS3Bucket.Outputs.S3Backup"
+        PMAPPLoadBalancerUrl: !GetAtt "MyAPPELB.Outputs.APPLoadBalancerUrl"
+        PMASMIN: !Ref "PMASMIN" # Minimum AutoScaling
+        PMASMAX: !Ref "PMASMAX" # Maximum AutoScaling
+        PMASDES: !Ref "PMASDES" # Desired AutoScaling
+        PMWEBDOMAIN: !Ref "PMWEBDOMAIN"
 
 #  MyCloudWatch:
 #    Type: "AWS::CloudFormation::Stack"
