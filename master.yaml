@@ -103,17 +103,17 @@ Parameters:
 ###############################################################################################################
 #
 # For any additional region & Env, you can add by yourself below.
-Mappings:
-  EnvMap:
+# Mappings:
+#   EnvMap:
 
-    dev:
-      CDNDOMAIN: "devel.kasturicookies.com"
+#     dev:
+#       CDNDOMAIN: "devel.kasturicookies.com"
 
-    staging:
-      CDNDOMAIN: "static.kasturicookies.com"
+#     staging:
+#       CDNDOMAIN: "static.kasturicookies.com"
 
-    prod:
-      CDNDOMAIN: "cdn.kasturicookies.com"
+#     prod:
+#       CDNDOMAIN: "cdn.kasturicookies.com"
 
   # RegionMap:
   #   # US,North Virginia
