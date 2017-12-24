@@ -11,7 +11,6 @@ Parameters:
 
   PMServerEnv:
     Description: "Server Environment name."
-    ConstraintDescription: "Choose an Environment from the drop down"
     Type: "String"
 
   PMWEBELBSG:
