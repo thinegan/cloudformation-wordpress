@@ -77,7 +77,7 @@ Resources:
           Transition:
             TransitionInDays: '60' # Move Data from S3 bucket to Infrequent Archive after 60 days.
             StorageClass: !Ref "PMRegionAStorage"
-    # DeletionPolicy: "Retain"
+    DeletionPolicy: "Retain"
 
   S3LoggingPolicy:
     Type: "AWS::S3::BucketPolicy"
