@@ -254,6 +254,7 @@ Resources:
 
   MyWEBAutoScaling:
     Type: "AWS::CloudFormation::Stack"
+    # Condition: "UseProdEnv"
     DependsOn:
     - "MyWEBELB"
     Properties:
@@ -267,7 +268,9 @@ Resources:
         PMAPPHostSG : !GetAtt "MySecurityGroup.Outputs.MyWordpressHostSG"
         PMWEBLoadBalancer: !GetAtt "MyWEBELB.Outputs.WEBLoadBalancer"
         PMIAMS3CWInstanceProfile: !GetAtt "MyIAMRole.Outputs.IAMS3CWInstanceProfile"
-        PMPublicSubnets: !GetAtt "MyVPC.Outputs.PublicSubnets"
+        PMPublicSubnets:
+          Fn::ImportValue: !Sub "${PMEnvVPC}-PublicSubnets"
+        # PMPublicSubnets: !GetAtt "MyVPC.Outputs.PublicSubnets"
         PMS3Backup: !GetAtt "MyS3Bucket.Outputs.S3Backup"
         PMAPPLoadBalancerUrl: !GetAtt "MyAPPELB.Outputs.APPLoadBalancerUrl"
         PMASMIN: !Ref "PMASMIN" # Minimum AutoScaling
