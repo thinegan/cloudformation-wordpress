@@ -27,7 +27,7 @@ Parameters:
     Description: "Subnets to launch instances into"
     Type: "List<AWS::EC2::Subnet::Id>"
 
-  PMProxyHostSG:
+  MyWordpressHostSG:
     Description: "Select the Security Group to use for the EC2 hosts"
     Type: "AWS::EC2::SecurityGroup::Id"
 
@@ -84,7 +84,7 @@ Resources:
       IamInstanceProfile:
         Ref: "PMIAMS3CWInstanceProfile"
       SecurityGroups:
-      - Ref: "PMProxyHostSG"
+      - Ref: "MyWordpressHostSG"
       UserData:
         Fn::Base64: !Sub |
           #!/bin/bash -xe

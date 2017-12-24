@@ -265,7 +265,7 @@ Resources:
         PMKeyName: !Ref "PMKeyName"
         PMInstanceType: !Ref "PMInstanceType"
         PMRegionAMI: !Ref "PMRegionAMI"
-        PMAPPHostSG : !GetAtt "MySecurityGroup.Outputs.MyWordpressHostSG"
+        MyWordpressHostSG : !GetAtt "MySecurityGroup.Outputs.MyWordpressHostSG"
         PMWEBLoadBalancer: !GetAtt "MyWEBELB.Outputs.WEBLoadBalancer"
         PMIAMS3CWInstanceProfile: !GetAtt "MyIAMRole.Outputs.IAMS3CWInstanceProfile"
         PMPublicSubnets:
