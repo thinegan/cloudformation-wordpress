@@ -278,21 +278,21 @@ Resources:
         PMASDES: !Ref "PMASDES" # Desired AutoScaling
         PMWEBDOMAIN: !Ref "PMWEBDOMAIN"
 
-#  MyCloudWatch:
-#    Type: "AWS::CloudFormation::Stack"
-#    DependsOn:
-#    - "MyWEBAutoScaling"
-#    Properties:
-#      TemplateURL: !Sub "${PMTemplateURL}/wp-cloudwatch.yaml"
-#      TimeoutInMinutes: '5'
-#      Parameters:
-#        PMWebScalingGroup: !GetAtt "MyWEBAutoScaling.Outputs.WebScalingGroup"
-#        PMWebServerScaleUpPolicy: !GetAtt "MyWEBAutoScaling.Outputs.WebServerScaleUpPolicy"
-#        PMWebServerScaleDownPolicy: !GetAtt "MyWEBAutoScaling.Outputs.WebServerScaleDownPolicy"
-#        PMAppScalingGroup: !GetAtt "MyAPPAutoScaling.Outputs.AppScalingGroup"
-#        PMAPPServerScaleUpPolicy: !GetAtt "MyAPPAutoScaling.Outputs.APPServerScaleUpPolicy"
-#        PMAPPServerScaleDownPolicy: !GetAtt "MyAPPAutoScaling.Outputs.APPServerScaleDownPolicy"
-#
+  MyCloudWatch:
+    Type: "AWS::CloudFormation::Stack"
+    DependsOn:
+    - "MyWEBAutoScaling"
+    Properties:
+      TemplateURL: !Sub "${PMTemplateURL}/wp-cloudwatch.yaml"
+      TimeoutInMinutes: '5'
+      Parameters:
+        PMWebScalingGroup: !GetAtt "MyWEBAutoScaling.Outputs.WebScalingGroup"
+        PMWebServerScaleUpPolicy: !GetAtt "MyWEBAutoScaling.Outputs.WebServerScaleUpPolicy"
+        PMWebServerScaleDownPolicy: !GetAtt "MyWEBAutoScaling.Outputs.WebServerScaleDownPolicy"
+        PMAppScalingGroup: !GetAtt "MyAPPAutoScaling.Outputs.AppScalingGroup"
+        PMAPPServerScaleUpPolicy: !GetAtt "MyAPPAutoScaling.Outputs.APPServerScaleUpPolicy"
+        PMAPPServerScaleDownPolicy: !GetAtt "MyAPPAutoScaling.Outputs.APPServerScaleDownPolicy"
+
 #  MyDNS:
 #    Type: "AWS::CloudFormation::Stack"
 #    DependsOn:
