@@ -306,26 +306,27 @@ Resources:
         PMWEBDOMAIN: !Ref "PMWEBDOMAIN"
         # PMWEBDOMAIN: !FindInMap ["EnvMap", !Ref "AWS::StackName", "WEBDOMAIN"]
         PMHostedZone: !Ref "PMHostedZone"
-#
-#
-#Outputs:
-#
-#  Webserver:
-#    Description: "Web Server Site"
-#    Value:
-#      Fn::Join:
-#        - ''
-#        - - "https://"
-#          - !FindInMap ["EnvMap", !Ref "AWS::StackName", "WEBDOMAIN"]
-#          - "/"
-#
-#  RDS:
-#    Description: "RDS Server EndPoint"
-#    Value:
-#      Fn::Join:
-#        - ''
-#        - - "Endpoint: "
-#          - !GetAtt "MyRDS.Outputs.RdsDbURL"
-#          - ":"
-#          - !GetAtt "MyRDS.Outputs.RdsDbPORT"
-#
+
+
+Outputs:
+
+  Webserver:
+    Description: "Web Server Site"
+    Value:
+      Fn::Join:
+        - ''
+        - - "https://"
+          - !Ref "PMWEBDOMAIN"
+          # - !FindInMap ["EnvMap", !Ref "AWS::StackName", "WEBDOMAIN"]
+          - "/"
+
+  RDS:
+    Description: "RDS Server EndPoint"
+    Value:
+      Fn::Join:
+        - ''
+        - - "Endpoint: "
+          - !GetAtt "MyRDS.Outputs.RdsDbURL"
+          - ":"
+          - !GetAtt "MyRDS.Outputs.RdsDbPORT"
+
