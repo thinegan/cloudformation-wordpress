@@ -12,12 +12,8 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: >
     This is a master template to create a Web Application Architecture.
-    The following task will be built in this template.
-    - Custom VPC with Private and Public Subnet spread across 2 Availability Zones.
-    - Internet Gateway, with a default route on the public subnets.
-    - NAT Gateways (In one Public AZ) and route to private subnets.
 
-    Last Modified: 11th Dec 2017
+    Last Modified: 26th Dec 2017
     Author: Thinegan Ratnam <thinegan@thinegan.com>
 
 ###############################################################################################################
@@ -101,36 +97,6 @@ Parameters:
     Type: "String"
 
 ###############################################################################################################
-#
-# For any additional region & Env, you can add by yourself below.
-# Mappings:
-#   EnvMap:
-
-#     dev:
-#       CDNDOMAIN: "devel.kasturicookies.com"
-
-#     staging:
-#       CDNDOMAIN: "static.kasturicookies.com"
-
-#     prod:
-#       CDNDOMAIN: "cdn.kasturicookies.com"
-
-  # RegionMap:
-  #   # US,North Virginia
-  #   us-east-1:
-  #     # AStorage - The storage class to which you want the object to transition.
-  #     # AStorage: "GLACIER"
-  #     # Update with your own cert ARN HERE!
-  #     # Assuming you have already upload to AWS Certificate Manager
-  #     #CertARN: "arn:aws:acm:us-east-1:370888776060:certificate/eec1f4f2-2632-4d20-bd8a-fbfbcdb15920"
-  #     #arn:aws:acm:us-east-1:210406761874:certificate/6e8e02b1-bce8-43f3-9e00-23050cd6f1ff
-
-  #   # Singapore
-  #   ap-southeast-1:
-  #     # AStorage: "STANDARD_IA"
-  #     #CertARN: "arn:aws:acm:ap-southeast-1:370888776060:certificate/b06aa290-bb09-4fee-9e09-864c4cc8cc98"
-
-###############################################################################################################
 
 ####### Condition Setup #######
 Conditions:
@@ -161,7 +127,7 @@ Resources:
 
   MySecurityGroup:
     Type: "AWS::CloudFormation::Stack"
-    # Condition: "UseProdEnv"
+    Condition: "UseProdEnv"
     Properties:
       TemplateURL: !Sub "${PMTemplateURL}/wp-securitygroup.yaml"
       TimeoutInMinutes: '5'
@@ -173,7 +139,7 @@ Resources:
 
   MyRDS:
     Type: "AWS::CloudFormation::Stack"
-    # Condition: "UseProdEnv"
+    Condition: "UseProdEnv"
     DependsOn:
     - "MySecurityGroup"
     Properties:
@@ -193,7 +159,7 @@ Resources:
 
   MyAPPELB:
     Type: "AWS::CloudFormation::Stack"
-    # Condition: "UseProdEnv"
+    Condition: "UseProdEnv"
     DependsOn:
     - "MyRDS"
     Properties:
@@ -211,7 +177,7 @@ Resources:
 
   MyAPPAutoScaling:
     Type: "AWS::CloudFormation::Stack"
-    # Condition: "UseProdEnv"
+    Condition: "UseProdEnv"
     DependsOn:
     - "MyAPPELB"
     Properties:
@@ -237,7 +203,7 @@ Resources:
 
   MyWEBELB:
     Type: "AWS::CloudFormation::Stack"
-    # Condition: "UseProdEnv"
+    Condition: "UseProdEnv"
     DependsOn:
     - "MyAPPAutoScaling"
     Properties:
@@ -249,12 +215,11 @@ Resources:
         PMWEBELBSG: !GetAtt "MySecurityGroup.Outputs.WEBELBSG"
         PMPublicSubnets:
           Fn::ImportValue: !Sub "${PMEnvVPC}-PublicSubnets"
-        # PMPublicSubnets: !GetAtt "MyVPC.Outputs.PublicSubnets"
         PMS3Logging: !GetAtt "MyS3Bucket.Outputs.S3Logging"
 
   MyWEBAutoScaling:
     Type: "AWS::CloudFormation::Stack"
-    # Condition: "UseProdEnv"
+    Condition: "UseProdEnv"
     DependsOn:
     - "MyWEBELB"
     Properties:
@@ -270,7 +235,6 @@ Resources:
         PMIAMS3CWInstanceProfile: !GetAtt "MyIAMRole.Outputs.IAMS3CWInstanceProfile"
         PMPublicSubnets:
           Fn::ImportValue: !Sub "${PMEnvVPC}-PublicSubnets"
-        # PMPublicSubnets: !GetAtt "MyVPC.Outputs.PublicSubnets"
         PMS3Backup: !GetAtt "MyS3Bucket.Outputs.S3Backup"
         PMAPPLoadBalancerUrl: !GetAtt "MyAPPELB.Outputs.APPLoadBalancerUrl"
         PMASMIN: !Ref "PMASMIN" # Minimum AutoScaling
@@ -280,6 +244,7 @@ Resources:
 
   MyCloudWatch:
     Type: "AWS::CloudFormation::Stack"
+    Condition: "UseProdEnv"
     DependsOn:
     - "MyWEBAutoScaling"
     Properties:
@@ -295,6 +260,7 @@ Resources:
 
   MyDNS:
     Type: "AWS::CloudFormation::Stack"
+    Condition: "UseProdEnv"
     DependsOn:
     - "MyCloudWatch"
     Properties:
@@ -304,9 +270,7 @@ Resources:
         PMWEBLBDNSName: !GetAtt "MyWEBELB.Outputs.WEBLBDNSName"
         PMWEBLBHostedZoneId: !GetAtt "MyWEBELB.Outputs.WEBLBHostedZoneId"
         PMWEBDOMAIN: !Ref "PMWEBDOMAIN"
-        # PMWEBDOMAIN: !FindInMap ["EnvMap", !Ref "AWS::StackName", "WEBDOMAIN"]
         PMHostedZone: !Ref "PMHostedZone"
-
 
 Outputs:
 
@@ -317,7 +281,6 @@ Outputs:
         - ''
         - - "https://"
           - !Ref "PMWEBDOMAIN"
-          # - !FindInMap ["EnvMap", !Ref "AWS::StackName", "WEBDOMAIN"]
           - "/"
 
   RDS:
