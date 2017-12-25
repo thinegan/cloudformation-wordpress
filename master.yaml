@@ -293,18 +293,19 @@ Resources:
         PMAPPServerScaleUpPolicy: !GetAtt "MyAPPAutoScaling.Outputs.APPServerScaleUpPolicy"
         PMAPPServerScaleDownPolicy: !GetAtt "MyAPPAutoScaling.Outputs.APPServerScaleDownPolicy"
 
-#  MyDNS:
-#    Type: "AWS::CloudFormation::Stack"
-#    DependsOn:
-#    - "MyCloudWatch"
-#    Properties:
-#      TemplateURL: !Sub "${PMTemplateURL}/wp-route53.yaml"
-#      TimeoutInMinutes: '5'
-#      Parameters:
-#        PMWEBLBDNSName: !GetAtt "MyWEBELB.Outputs.WEBLBDNSName"
-#        PMWEBLBHostedZoneId: !GetAtt "MyWEBELB.Outputs.WEBLBHostedZoneId"
-#        PMWEBDOMAIN: !FindInMap ["EnvMap", !Ref "AWS::StackName", "WEBDOMAIN"]
-#        PMHostedZone: !Ref "PMHostedZone"
+  MyDNS:
+    Type: "AWS::CloudFormation::Stack"
+    DependsOn:
+    - "MyCloudWatch"
+    Properties:
+      TemplateURL: !Sub "${PMTemplateURL}/wp-route53.yaml"
+      TimeoutInMinutes: '5'
+      Parameters:
+        PMWEBLBDNSName: !GetAtt "MyWEBELB.Outputs.WEBLBDNSName"
+        PMWEBLBHostedZoneId: !GetAtt "MyWEBELB.Outputs.WEBLBHostedZoneId"
+        PMWEBDOMAIN: !Ref "PMWEBDOMAIN"
+        # PMWEBDOMAIN: !FindInMap ["EnvMap", !Ref "AWS::StackName", "WEBDOMAIN"]
+        PMHostedZone: !Ref "PMHostedZone"
 #
 #
 #Outputs:
