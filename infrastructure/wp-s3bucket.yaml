@@ -56,6 +56,15 @@ Resources:
           Resource: !Join ["", ["arn:aws:s3:::", !Ref "S3Backup", "/*"]]
           Principal:
             AWS: "*"
+        - Sid: "DenyUnEncryptedObjectUploads"
+          Effect: "Deny"
+          Principal:
+            AWS: "*"
+          Action: "s3:PutObject"
+          Resource: !Join ["", ["arn:aws:s3:::", !Ref "S3Backup", "/*"]]
+          Condition:
+            StringNotEquals:
+              s3:x-amz-server-side-encryption: "AES256"
 
   ############################################################################
   # S3 Logging Bucket Data Encrypted Bucket
