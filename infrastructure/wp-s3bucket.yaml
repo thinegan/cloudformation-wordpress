@@ -50,12 +50,12 @@ Resources:
       Bucket: !Ref "S3Backup"
       PolicyDocument:
         Statement:
-        - Sid: "AllowObjectUploads"
-          Effect: "Allow"
-          Action: "s3:PutObject"
-          Resource: !Join ["", ["arn:aws:s3:::", !Ref "S3Backup", "/*"]]
-          Principal:
-            AWS: "*"
+        # - Sid: "AllowObjectUploads"
+        #   Effect: "Allow"
+        #   Action: "s3:PutObject"
+        #   Resource: !Join ["", ["arn:aws:s3:::", !Ref "S3Backup", "/*"]]
+        #   Principal:
+        #     AWS: "*"
         - Sid: "DenyUnEncryptedObjectUploads"
           Effect: "Deny"
           Principal:
