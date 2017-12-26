@@ -139,7 +139,7 @@ Resources:
 
   MyRDS:
     Type: "AWS::CloudFormation::Stack"
-    Condition: "UseProdEnv"
+    # Condition: "UseProdEnv"
     DependsOn:
     - "MySecurityGroup"
     Properties:
@@ -159,7 +159,7 @@ Resources:
 
   MyAPPELB:
     Type: "AWS::CloudFormation::Stack"
-    Condition: "UseProdEnv"
+    # Condition: "UseProdEnv"
     DependsOn:
     - "MyRDS"
     Properties:
@@ -177,7 +177,7 @@ Resources:
 
   MyAPPAutoScaling:
     Type: "AWS::CloudFormation::Stack"
-    Condition: "UseProdEnv"
+    # Condition: "UseProdEnv"
     DependsOn:
     - "MyAPPELB"
     Properties:
@@ -203,7 +203,7 @@ Resources:
 
   MyWEBELB:
     Type: "AWS::CloudFormation::Stack"
-    Condition: "UseProdEnv"
+    # Condition: "UseProdEnv"
     DependsOn:
     - "MyAPPAutoScaling"
     Properties:
@@ -219,7 +219,7 @@ Resources:
 
   MyWEBAutoScaling:
     Type: "AWS::CloudFormation::Stack"
-    Condition: "UseProdEnv"
+    # Condition: "UseProdEnv"
     DependsOn:
     - "MyWEBELB"
     Properties:
@@ -244,7 +244,7 @@ Resources:
 
   MyCloudWatch:
     Type: "AWS::CloudFormation::Stack"
-    Condition: "UseProdEnv"
+    # Condition: "UseProdEnv"
     DependsOn:
     - "MyWEBAutoScaling"
     Properties:
@@ -260,7 +260,7 @@ Resources:
 
   MyDNS:
     Type: "AWS::CloudFormation::Stack"
-    Condition: "UseProdEnv"
+    # Condition: "UseProdEnv"
     DependsOn:
     - "MyCloudWatch"
     Properties:
