@@ -180,7 +180,7 @@ Resources:
 
   MyAPPAutoScaling:
     Type: "AWS::CloudFormation::Stack"
-    # Condition: "UseProdEnv"
+    Condition: "UseProdEnv"
     DependsOn:
     - "MyAPPELB"
     Properties:
@@ -207,7 +207,7 @@ Resources:
 
   MyWEBELB:
     Type: "AWS::CloudFormation::Stack"
-    # Condition: "UseProdEnv"
+    Condition: "UseProdEnv"
     DependsOn:
     - "MyAPPAutoScaling"
     Properties:
@@ -223,7 +223,7 @@ Resources:
 
   MyWEBAutoScaling:
     Type: "AWS::CloudFormation::Stack"
-    # Condition: "UseProdEnv"
+    Condition: "UseProdEnv"
     DependsOn:
     - "MyWEBELB"
     Properties:
@@ -248,7 +248,7 @@ Resources:
 
   MyCloudWatch:
     Type: "AWS::CloudFormation::Stack"
-    # Condition: "UseProdEnv"
+    Condition: "UseProdEnv"
     DependsOn:
     - "MyWEBAutoScaling"
     Properties:
