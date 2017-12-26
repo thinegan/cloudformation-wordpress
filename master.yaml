@@ -168,8 +168,7 @@ Resources:
       Parameters:
         PMServerEnv: !Ref "AWS::StackName"
         PMAPPELBSG: !GetAtt "MySecurityGroup.Outputs.APPELBSG"
-        PMS3Logging:
-          Fn::ImportValue: !Sub "${PMEnvVPC}-S3Logging"
+        PMS3Logging: !GetAtt "MyS3Bucket.Outputs.S3Logging"
         PMPrivateSubnets:
           Fn::ImportValue: !Sub "${PMEnvVPC}-PrivateSubnets"
         PMPublicSubnets:
