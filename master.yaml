@@ -264,7 +264,7 @@ Resources:
 
   MyDNS:
     Type: "AWS::CloudFormation::Stack"
-    # Condition: "UseProdEnv"
+    Condition: "UseProdEnv"
     DependsOn:
     - "MyCloudWatch"
     Properties:
