@@ -180,7 +180,7 @@ Resources:
 
   MyAPPAutoScaling:
     Type: "AWS::CloudFormation::Stack"
-    Condition: "UseProdEnv"
+    # Condition: "UseProdEnv"
     DependsOn:
     - "MyAPPELB"
     Properties:
