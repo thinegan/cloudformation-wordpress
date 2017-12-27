@@ -248,7 +248,7 @@ Resources:
 
   MyCloudWatch:
     Type: "AWS::CloudFormation::Stack"
-    Condition: "UseProdEnv"
+    # Condition: "UseProdEnv"
     DependsOn:
     - "MyWEBAutoScaling"
     Properties:
@@ -264,7 +264,7 @@ Resources:
 
   MyDNS:
     Type: "AWS::CloudFormation::Stack"
-    Condition: "UseProdEnv"
+    # Condition: "UseProdEnv"
     DependsOn:
     - "MyCloudWatch"
     Properties:
