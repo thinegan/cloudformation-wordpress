@@ -114,12 +114,12 @@ Resources:
           then 
           # File aready exist! (sync s3 backup to site-folder)
           mkdir -p /home/www/public_html/${PMWEBDOMAIN}
-          aws s3 sync s3://${PMS3Backup}/ /home/www/public_html/${PMWEBDOMAIN}/
+          aws s3 sync --sse AES256 s3://${PMS3Backup}/ /home/www/public_html/${PMWEBDOMAIN}/
           chown -R nginx:nginx /home/www/public_html/${PMWEBDOMAIN}
           chmod -R +x /home/www/public_html/${PMWEBDOMAIN}
           # Setup Crontab
-          crontab -l | { cat; echo "*/2 * * * * aws s3 sync --no-follow-symlinks --delete /home/www/public_html/${PMWEBDOMAIN}/ s3://${PMS3Backup}/ > /dev/null 2>&1"; } | crontab -
-          crontab -l | { cat; echo "*/3 * * * * aws s3 sync s3://${PMS3Backup}/ /home/www/public_html/${PMWEBDOMAIN}/ > /dev/null 2>&1"; } | crontab -
+          crontab -l | { cat; echo "*/2 * * * * aws s3 sync --sse AES256 --no-follow-symlinks --delete /home/www/public_html/${PMWEBDOMAIN}/ s3://${PMS3Backup}/ > /dev/null 2>&1"; } | crontab -
+          crontab -l | { cat; echo "*/3 * * * * aws s3 sync --sse AES256 s3://${PMS3Backup}/ /home/www/public_html/${PMWEBDOMAIN}/ > /dev/null 2>&1"; } | crontab -
           service crond restart
           else
           # File don't exist (download wordpress)
@@ -131,10 +131,10 @@ Resources:
           mv wordpress ${PMWEBDOMAIN}
           chown -R nginx:nginx /home/www/public_html/${PMWEBDOMAIN}
           chmod -R +x /home/www/public_html/${PMWEBDOMAIN}
-          aws s3 sync /home/www/public_html/${PMWEBDOMAIN}/ s3://${PMS3Backup}/
+          aws s3 sync --sse AES256 /home/www/public_html/${PMWEBDOMAIN}/ s3://${PMS3Backup}/
           # Setup Crontab
-          crontab -l | { cat; echo "*/2 * * * * aws s3 sync --no-follow-symlinks --delete /home/www/public_html/${PMWEBDOMAIN}/ s3://${PMS3Backup}/ > /dev/null 2>&1"; } | crontab -
-          crontab -l | { cat; echo "*/3 * * * * aws s3 sync s3://${PMS3Backup}/ /home/www/public_html/${PMWEBDOMAIN}/ > /dev/null 2>&1"; } | crontab -
+          crontab -l | { cat; echo "*/2 * * * * aws s3 sync --sse AES256 --no-follow-symlinks --delete /home/www/public_html/${PMWEBDOMAIN}/ s3://${PMS3Backup}/ > /dev/null 2>&1"; } | crontab -
+          crontab -l | { cat; echo "*/3 * * * * aws s3 sync --sse AES256 s3://${PMS3Backup}/ /home/www/public_html/${PMWEBDOMAIN}/ > /dev/null 2>&1"; } | crontab -
           service crond restart
           fi
 
