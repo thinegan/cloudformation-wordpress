@@ -138,6 +138,11 @@ Resources:
         IpProtocol: "tcp"
         SourceSecurityGroupId:
           Ref: "MyWordpressHostSG"
+      - FromPort: "3306"
+        ToPort: "3306"
+        IpProtocol: "tcp"
+        SourceSecurityGroupId:
+          Ref: "APPHostSG"
       SecurityGroupEgress:
         - IpProtocol: '-1'
           CidrIp: '0.0.0.0/0'
