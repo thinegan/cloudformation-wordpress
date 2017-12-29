@@ -118,7 +118,7 @@ Resources:
           chown -R nginx:nginx /home/www/public_html/${PMWEBDOMAIN}
           chmod -R +x /home/www/public_html/${PMWEBDOMAIN}
           # Setup Crontab
-          crontab -l | { cat; echo "*/2 * * * * aws s3 sync --sse AES256 --no-follow-symlinks --delete /home/www/public_html/${PMWEBDOMAIN}/ s3://${PMS3Backup}/ > /dev/null 2>&1"; } | crontab -
+          crontab -l | { cat; echo "*/2 * * * * aws s3 sync --sse AES256 --no-follow-symlinks /home/www/public_html/${PMWEBDOMAIN}/ s3://${PMS3Backup}/ > /dev/null 2>&1"; } | crontab -
           crontab -l | { cat; echo "*/3 * * * * aws s3 sync --sse AES256 s3://${PMS3Backup}/ /home/www/public_html/${PMWEBDOMAIN}/ > /dev/null 2>&1"; } | crontab -
           service crond restart
           else
@@ -133,7 +133,7 @@ Resources:
           chmod -R +x /home/www/public_html/${PMWEBDOMAIN}
           aws s3 sync --sse AES256 /home/www/public_html/${PMWEBDOMAIN}/ s3://${PMS3Backup}/
           # Setup Crontab
-          crontab -l | { cat; echo "*/2 * * * * aws s3 sync --sse AES256 --no-follow-symlinks --delete /home/www/public_html/${PMWEBDOMAIN}/ s3://${PMS3Backup}/ > /dev/null 2>&1"; } | crontab -
+          crontab -l | { cat; echo "*/2 * * * * aws s3 sync --sse AES256 --no-follow-symlinks /home/www/public_html/${PMWEBDOMAIN}/ s3://${PMS3Backup}/ > /dev/null 2>&1"; } | crontab -
           crontab -l | { cat; echo "*/3 * * * * aws s3 sync --sse AES256 s3://${PMS3Backup}/ /home/www/public_html/${PMWEBDOMAIN}/ > /dev/null 2>&1"; } | crontab -
           service crond restart
           fi
