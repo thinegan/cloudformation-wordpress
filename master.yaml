@@ -1,0 +1,299 @@
+# Note : The Cloudformation Security Group IP address is open by default (testing purpose).
+# You should update Security Group Access with your own IP Address to ensure your instances security.
+#
+# Prerequisites
+# Before you can start this process, you need the following:
+# - Your AWS account must have one VPC available to be created in the selected region
+# - Amazon EC2 key pair
+# - Installed Domain in Route 53.
+# - Installed Certificate (in your selected region & also in us-east-1) 
+#
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+    This is a master template to create a Web Application Architecture.
+
+    Last Modified: 26th Dec 2017
+    Author: Thinegan Ratnam <thinegan@thinegan.com>
+
+###############################################################################################################
+
+Parameters: 
+
+  PMEnvVPC:
+    Description: "Stack VPC Environment."
+    Type: "String"
+
+  PMOWNIP:
+    Description: "Update this with your own office/home public ip address"
+    Type: "String"
+
+  PMKeyName:
+    Description: "Enter an existing EC2 KeyPair."
+    Type: "String" 
+
+  PMWordpressVer:
+    Description: "Enter an wordpress version."
+    Type: "String"
+
+  PMTemplateURL:
+    Description: "Enter an existing S3 Cloudformation Bucket."
+    Type: "String"
+
+  PMHostedZone:
+    Description: "Enter an existing Hosted Zone."
+    Type: "String"
+
+  PMWEBDOMAIN:
+    Description: "Enter a web domain."
+    Type: "String"
+
+  PMInstanceType: 
+    Description: "Enter t2.micro or m1.small. Default is t2.micro."
+    Type: "String"
+
+  PMRegionAMI: 
+    Description: "Enter AMI"
+    Type: "String"
+
+  PMASMIN:
+    Description: "Minimum Autoscaling Requirement"
+    Type: "String"
+
+  PMASMAX:
+    Description: "Maximum Autoscaling Requirement"
+    Type: "String"
+
+  PMASDES:
+    Description: "Desired Autoscaling Requirement"
+    Type: "String"
+
+  PMCertARN:
+    Description: "Domain TLS/SSL Cert in ARN"
+    Type: "String"
+
+  PMRegionAStorage: 
+    Description: "Archive Storage"
+    Type: "String"
+
+  PMDatabaseUsername:
+    Description: "Enter DB username."
+    Type: "String"
+
+  PMDatabasePassword:
+    Description: "Enter DB password."
+    Type: "String"
+
+  PMDatabaseEngine:
+    Description: "Db Type."
+    Type: "String"
+
+  PMDatabaseInstanceClass:
+    Description: "Db Instance type."
+    Type: "String"
+
+  PMDatabaseName:
+    Description: "Db Name."
+    Type: "String"
+
+  PMDatabaseSize:
+    Description: "Db Size."
+    Type: "String"
+
+###############################################################################################################
+
+####### Condition Setup #######
+Conditions:
+  UseProdEnv: !Equals [ !Ref "PMInstanceType", "prod" ]
+
+
+Resources:
+
+  MyIAMRole:
+    Type: "AWS::CloudFormation::Stack"
+    Properties:
+      TemplateURL: !Sub "${PMTemplateURL}/wp-iam.yaml"
+      TimeoutInMinutes: '5'
+      Parameters:
+        PMServerEnv: !Ref "AWS::StackName"
+
+  MyS3Bucket:
+    Type: "AWS::CloudFormation::Stack"
+    Condition: "UseProdEnv"
+    DependsOn:
+    - "MyIAMRole"
+    Properties:
+      TemplateURL: !Sub "${PMTemplateURL}/wp-s3bucket.yaml"
+      TimeoutInMinutes: '5'
+      Parameters:
+        PMServerEnv: !Ref "AWS::StackName"
+        PMRegionAStorage: !Ref "PMRegionAStorage"
+
+  MySecurityGroup:
+    Type: "AWS::CloudFormation::Stack"
+    Condition: "UseProdEnv"
+    Properties:
+      TemplateURL: !Sub "${PMTemplateURL}/wp-securitygroup.yaml"
+      TimeoutInMinutes: '5'
+      Parameters:
+        PMOWNIP: !Ref "PMOWNIP"
+        PMServerEnv: !Ref "AWS::StackName"
+        PMVPC:
+          Fn::ImportValue: !Sub "${PMEnvVPC}-VPC"
+
+  MyRDS:
+    Type: "AWS::CloudFormation::Stack"
+    Condition: "UseProdEnv"
+    DependsOn:
+    - "MySecurityGroup"
+    Properties:
+      TemplateURL: !Sub "${PMTemplateURL}/wp-rds.yaml"
+      TimeoutInMinutes: '5'
+      Parameters:
+        PMServerEnv: !Ref "AWS::StackName"
+        DatabaseUser: !Ref "PMDatabaseUsername"
+        DatabasePassword: !Ref "PMDatabasePassword"
+        DatabaseName: !Ref "PMDatabaseName"
+        DatabaseSize: !Ref "PMDatabaseSize"
+        DatabaseEngine: !Ref "PMDatabaseEngine"
+        DatabaseInstanceClass: !Ref "PMDatabaseInstanceClass"
+        PMRDSSG: !GetAtt "MySecurityGroup.Outputs.RDSSG"
+        PMPrivateSubnets:
+          Fn::ImportValue: !Sub "${PMEnvVPC}-PrivateSubnets"
+
+  MyAPPELB:
+    Type: "AWS::CloudFormation::Stack"
+    Condition: "UseProdEnv"
+    DependsOn:
+    - "MyRDS"
+    Properties:
+      TemplateURL: !Sub "${PMTemplateURL}/wp-elb-appserver.yaml"
+      TimeoutInMinutes: '5'
+      Parameters:
+        PMServerEnv: !Ref "AWS::StackName"
+        PMAPPELBSG: !GetAtt "MySecurityGroup.Outputs.APPELBSG"
+        PMS3Logging: !GetAtt "MyS3Bucket.Outputs.S3Logging"
+        PMPrivateSubnets:
+          Fn::ImportValue: !Sub "${PMEnvVPC}-PrivateSubnets"
+        PMPublicSubnets:
+          Fn::ImportValue: !Sub "${PMEnvVPC}-PublicSubnets"
+
+  MyAPPAutoScaling:
+    Type: "AWS::CloudFormation::Stack"
+    Condition: "UseProdEnv"
+    DependsOn:
+    - "MyAPPELB"
+    Properties:
+      TemplateURL: !Sub "${PMTemplateURL}/wp-autoscaling-appserver.yaml"
+      TimeoutInMinutes: '5'
+      Parameters:
+        PMServerEnv: !Ref "AWS::StackName"
+        PMKeyName: !Ref "PMKeyName"
+        PMInstanceType: !Ref "PMInstanceType"
+        PMWordpressVer: !Ref "PMWordpressVer"
+        PMRegionAMI: !Ref "PMRegionAMI"
+        PMAPPHostSG : !GetAtt "MySecurityGroup.Outputs.APPHostSG"
+        PMAPPLoadBalancer: !GetAtt "MyAPPELB.Outputs.APPLoadBalancer"
+        PMS3Backup: !GetAtt "MyS3Bucket.Outputs.S3Backup"
+        PMIAMS3CWInstanceProfile: !GetAtt "MyIAMRole.Outputs.IAMS3CWInstanceProfile"
+        PMPrivateSubnets:
+          Fn::ImportValue: !Sub "${PMEnvVPC}-PrivateSubnets"
+        PMPublicSubnets:
+          Fn::ImportValue: !Sub "${PMEnvVPC}-PublicSubnets"
+        PMASMIN: !Ref "PMASMIN" # Minimum AutoScaling
+        PMASMAX: !Ref "PMASMAX" # Maximum AutoScaling
+        PMASDES: !Ref "PMASDES" # Desired AutoScaling
+        PMWEBDOMAIN: !Ref "PMWEBDOMAIN"
+
+  MyWEBELB:
+    Type: "AWS::CloudFormation::Stack"
+    Condition: "UseProdEnv"
+    DependsOn:
+    - "MyAPPAutoScaling"
+    Properties:
+      TemplateURL: !Sub "${PMTemplateURL}/wp-elb-webserver.yaml"
+      TimeoutInMinutes: '5'
+      Parameters:
+        PMServerEnv: !Ref "AWS::StackName"
+        PMCertARN: !Ref "PMCertARN"
+        PMWEBELBSG: !GetAtt "MySecurityGroup.Outputs.WEBELBSG"
+        PMPublicSubnets:
+          Fn::ImportValue: !Sub "${PMEnvVPC}-PublicSubnets"
+        PMS3Logging: !GetAtt "MyS3Bucket.Outputs.S3Logging"
+
+  MyWEBAutoScaling:
+    Type: "AWS::CloudFormation::Stack"
+    Condition: "UseProdEnv"
+    DependsOn:
+    - "MyWEBELB"
+    Properties:
+      TemplateURL: !Sub "${PMTemplateURL}/wp-autoscaling-webserver.yaml"
+      TimeoutInMinutes: '5'
+      Parameters:
+        PMServerEnv: !Ref "AWS::StackName"
+        PMKeyName: !Ref "PMKeyName"
+        PMInstanceType: !Ref "PMInstanceType"
+        PMRegionAMI: !Ref "PMRegionAMI"
+        MyWordpressHostSG : !GetAtt "MySecurityGroup.Outputs.MyWordpressHostSG"
+        PMWEBLoadBalancer: !GetAtt "MyWEBELB.Outputs.WEBLoadBalancer"
+        PMIAMS3CWInstanceProfile: !GetAtt "MyIAMRole.Outputs.IAMS3CWInstanceProfile"
+        PMPublicSubnets:
+          Fn::ImportValue: !Sub "${PMEnvVPC}-PublicSubnets"
+        PMS3Backup: !GetAtt "MyS3Bucket.Outputs.S3Backup"
+        PMAPPLoadBalancerUrl: !GetAtt "MyAPPELB.Outputs.APPLoadBalancerUrl"
+        PMASMIN: !Ref "PMASMIN" # Minimum AutoScaling
+        PMASMAX: !Ref "PMASMAX" # Maximum AutoScaling
+        PMASDES: !Ref "PMASDES" # Desired AutoScaling
+        PMWEBDOMAIN: !Ref "PMWEBDOMAIN"
+
+  MyCloudWatch:
+    Type: "AWS::CloudFormation::Stack"
+    Condition: "UseProdEnv"
+    DependsOn:
+    - "MyWEBAutoScaling"
+    Properties:
+      TemplateURL: !Sub "${PMTemplateURL}/wp-cloudwatch.yaml"
+      TimeoutInMinutes: '5'
+      Parameters:
+        PMWebScalingGroup: !GetAtt "MyWEBAutoScaling.Outputs.WebScalingGroup"
+        PMWebServerScaleUpPolicy: !GetAtt "MyWEBAutoScaling.Outputs.WebServerScaleUpPolicy"
+        PMWebServerScaleDownPolicy: !GetAtt "MyWEBAutoScaling.Outputs.WebServerScaleDownPolicy"
+        PMAppScalingGroup: !GetAtt "MyAPPAutoScaling.Outputs.AppScalingGroup"
+        PMAPPServerScaleUpPolicy: !GetAtt "MyAPPAutoScaling.Outputs.APPServerScaleUpPolicy"
+        PMAPPServerScaleDownPolicy: !GetAtt "MyAPPAutoScaling.Outputs.APPServerScaleDownPolicy"
+
+  MyDNS:
+    Type: "AWS::CloudFormation::Stack"
+    Condition: "UseProdEnv"
+    DependsOn:
+    - "MyCloudWatch"
+    Properties:
+      TemplateURL: !Sub "${PMTemplateURL}/wp-route53.yaml"
+      TimeoutInMinutes: '5'
+      Parameters:
+        PMWEBLBDNSName: !GetAtt "MyWEBELB.Outputs.WEBLBDNSName"
+        PMWEBLBHostedZoneId: !GetAtt "MyWEBELB.Outputs.WEBLBHostedZoneId"
+        PMWEBDOMAIN: !Ref "PMWEBDOMAIN"
+        PMHostedZone: !Ref "PMHostedZone"
+
+Outputs:
+
+  Webserver:
+    Description: "Web Server Site"
+    Value:
+      Fn::Join:
+        - ''
+        - - "https://"
+          - !Ref "PMWEBDOMAIN"
+          - "/"
+
+  RDS:
+    Description: "RDS Server EndPoint"
+    Value:
+      Fn::Join:
+        - ''
+        - - "Endpoint: "
+          - !GetAtt "MyRDS.Outputs.RdsDbURL"
+          - ":"
+          - !GetAtt "MyRDS.Outputs.RdsDbPORT"
+

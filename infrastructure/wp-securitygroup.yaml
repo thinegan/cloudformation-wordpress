@@ -1,0 +1,177 @@
+# Note : The Cloudformation Security Group IP address is open by default (testing purpose).
+# You should update Security Group Access with your own IP Address to ensure your instances security.
+#
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >
+    This template contains the Security Groups and Network Access Control
+    required by our entire stack. We create them in a seperate nested template,
+    so they can be referenced by all of the other nested templates.
+
+Parameters:
+
+  PMOWNIP:
+    Description: "Update this with your own office/home public ip address"
+    Type: "String"
+
+  PMServerEnv:
+    Description: "Server Environment name."
+    ConstraintDescription: "Choose an Environment from the drop down"
+    Type: "String"
+
+  PMVPC:
+    Description: "VPC to launch instances into"
+    Type: "AWS::EC2::VPC::Id"
+
+Resources:
+  # This security group defines Nginx Web proxy host.
+  # By default we're just allowing access from the load balancer.  If you want to SSH 
+  # into the hosts, or expose non-load balanced services you can open their ports here.
+  MyWordpressHostSG:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties: 
+      VpcId: !Ref "PMVPC"
+      GroupDescription: "Web Server Security Group"
+      SecurityGroupIngress:
+        - FromPort: "-1"
+          ToPort: "-1"
+          IpProtocol: "icmp"
+          CidrIp: '0.0.0.0/0'
+        - FromPort: "22"
+          ToPort: "22"
+          IpProtocol: "tcp"
+          CidrIp: !Ref "PMOWNIP"
+        - FromPort: "443"
+          ToPort: "443"
+          IpProtocol: "tcp"
+          SourceSecurityGroupId:
+            Ref: "WEBELBSG"
+        - FromPort: "80"
+          ToPort: "80"
+          IpProtocol: "tcp"
+          SourceSecurityGroupId:
+            Ref: "WEBELBSG"
+      SecurityGroupEgress:
+        - IpProtocol: '-1'
+          CidrIp: '0.0.0.0/0'
+      Tags:
+        - Key: "Name"
+          Value: !Sub "${PMServerEnv}-MyWordpressHostSG"
+
+  # Web Proxy Server Elastic Load Balancer
+  WEBELBSG:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      VpcId: !Ref "PMVPC"
+      GroupDescription: "ELB-WEBSG"
+      SecurityGroupIngress:
+        - FromPort: "-1"
+          ToPort: "-1"
+          IpProtocol: "icmp"
+          CidrIp: '0.0.0.0/0'
+        - FromPort: "443"
+          ToPort: "443"
+          IpProtocol: "tcp"
+          CidrIp: '0.0.0.0/0'
+        - FromPort: "80"
+          ToPort: "80"
+          IpProtocol: "tcp"
+          CidrIp: '0.0.0.0/0'
+      Tags:
+        - Key: "Name"
+          Value: !Sub "${PMServerEnv}-WEBELBSG"
+
+  # App Server Security Group
+  # PHP-fpm (port 9000)
+  APPHostSG:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties: 
+      VpcId: !Ref "PMVPC"
+      GroupDescription: "Application Server Security Group"
+      SecurityGroupIngress:
+        # This is private subnet, so you can only able to ssh once you're inside 
+        # the public subnet host (E.g. Bastion Host).
+        - FromPort: "22"
+          ToPort: "22"
+          IpProtocol: "tcp"
+          CidrIp: "0.0.0.0/0"
+        - FromPort: "9000"
+          ToPort: "9000"
+          IpProtocol: "tcp"
+          SourceSecurityGroupId:
+            Ref: "APPELBSG"
+      SecurityGroupEgress:
+        - IpProtocol: '-1'
+          CidrIp: '0.0.0.0/0'
+      Tags:
+        - Key: "Name"
+          Value: !Sub "${PMServerEnv}-APPHostSG"
+
+  # AppServer Elastic Load Balancer
+  APPELBSG:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      VpcId: !Ref "PMVPC"
+      GroupDescription: "ELB-APPSG"
+      SecurityGroupIngress:
+        - FromPort: "9000"
+          ToPort: "9000"
+          IpProtocol: "tcp"
+          SourceSecurityGroupId:
+            Ref: "MyWordpressHostSG"
+      SecurityGroupEgress:
+        - IpProtocol: '-1'
+          CidrIp: '0.0.0.0/0'
+      Tags:
+        - Key: "Name"
+          Value: !Sub "${PMServerEnv}-APPELBSG"
+
+  # Allow RDS connection from ProxyHostSG only.
+  RDSSG:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      VpcId: !Ref "PMVPC"
+      GroupDescription: "Security group for RDS DB Instance."
+      SecurityGroupIngress:
+      - FromPort: "3306"
+        ToPort: "3306"
+        IpProtocol: "tcp"
+        SourceSecurityGroupId:
+          Ref: "MyWordpressHostSG"
+      - FromPort: "3306"
+        ToPort: "3306"
+        IpProtocol: "tcp"
+        SourceSecurityGroupId:
+          Ref: "APPHostSG"
+      SecurityGroupEgress:
+        - IpProtocol: '-1'
+          CidrIp: '0.0.0.0/0'
+      Tags:
+        - Key: "Name"
+          Value: !Sub "${PMServerEnv}-RDSSG"
+
+Outputs:
+
+  MyWordpressHostSG: 
+    Description: "A reference to the security group for Proxy hosts"
+    Value: !Ref "MyWordpressHostSG"
+
+  WEBELBSG:
+    Description: "A reference to the security group for Web ELB"
+    Value: !Ref "WEBELBSG"
+
+  APPHostSG: 
+    Description: "A reference to the security group for APP hosts"
+    Value: !Ref "APPHostSG"
+
+  APPELBSG:
+    Description: "A reference to the security group for Application ELB"
+    Value: !Ref "APPELBSG"
+
+  RDSSG:
+    Description: "A reference to the security group for RDS"
+    Value: !Ref "RDSSG"
+    Export:
+      Name: !Sub "${PMServerEnv}-RDSSG"
+
+
