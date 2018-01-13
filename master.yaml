@@ -119,7 +119,7 @@ Resources:
 
   MyS3Bucket:
     Type: "AWS::CloudFormation::Stack"
-    Condition: "UseProdEnv"
+    # Condition: "UseProdEnv"
     DependsOn:
     - "MyIAMRole"
     Properties:
@@ -131,7 +131,7 @@ Resources:
 
   MySecurityGroup:
     Type: "AWS::CloudFormation::Stack"
-    Condition: "UseProdEnv"
+    # Condition: "UseProdEnv"
     Properties:
       TemplateURL: !Sub "${PMTemplateURL}/wp-securitygroup.yaml"
       TimeoutInMinutes: '5'
