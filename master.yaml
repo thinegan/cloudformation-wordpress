@@ -287,13 +287,13 @@ Outputs:
           - !Ref "PMWEBDOMAIN"
           - "/"
 
-  RDS:
-    Description: "RDS Server EndPoint"
-    Value:
-      Fn::Join:
-        - ''
-        - - "Endpoint: "
-          - !GetAtt "MyRDS.Outputs.RdsDbURL"
-          - ":"
-          - !GetAtt "MyRDS.Outputs.RdsDbPORT"
+  # RDS:
+  #   Description: "RDS Server EndPoint"
+  #   Value:
+  #     Fn::Join:
+  #       - ''
+  #       - - "Endpoint: "
+  #         - !GetAtt "MyRDS.Outputs.RdsDbURL"
+  #         - ":"
+  #         - !GetAtt "MyRDS.Outputs.RdsDbPORT"
 
