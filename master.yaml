@@ -164,8 +164,8 @@ Resources:
   MyWEBELB:
     Type: "AWS::CloudFormation::Stack"
     # Condition: "UseProdEnv"
-    # DependsOn:
-    # - "MyAPPAutoScaling"
+    DependsOn:
+    - "MyRDS"
     Properties:
       TemplateURL: !Sub "${PMTemplateURL}/wp-elb-webserver.yaml"
       TimeoutInMinutes: '5'
