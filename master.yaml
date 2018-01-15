@@ -161,73 +161,13 @@ Resources:
         PMPrivateSubnets:
           Fn::ImportValue: !Sub "${PMEnvVPC}-PrivateSubnets"
 
-  MyAPPELB:
-    Type: "AWS::CloudFormation::Stack"
-    Condition: "UseProdEnv"
-    DependsOn:
-    - "MyRDS"
-    Properties:
-      TemplateURL: !Sub "${PMTemplateURL}/wp-elb-appserver.yaml"
-      TimeoutInMinutes: '5'
-      Parameters:
-        PMServerEnv: !Ref "AWS::StackName"
-        PMAPPELBSG: !GetAtt "MySecurityGroup.Outputs.APPELBSG"
-        PMS3Logging: !GetAtt "MyS3Bucket.Outputs.S3Logging"
-        PMPrivateSubnets:
-          Fn::ImportValue: !Sub "${PMEnvVPC}-PrivateSubnets"
-        PMPublicSubnets:
-          Fn::ImportValue: !Sub "${PMEnvVPC}-PublicSubnets"
-
-  MyAPPAutoScaling:
-    Type: "AWS::CloudFormation::Stack"
-    Condition: "UseProdEnv"
-    DependsOn:
-    - "MyAPPELB"
-    Properties:
-      TemplateURL: !Sub "${PMTemplateURL}/wp-autoscaling-appserver.yaml"
-      TimeoutInMinutes: '5'
-      Parameters:
-        PMServerEnv: !Ref "AWS::StackName"
-        PMKeyName: !Ref "PMKeyName"
-        PMInstanceType: !Ref "PMInstanceType"
-        PMWordpressVer: !Ref "PMWordpressVer"
-        PMRegionAMI: !Ref "PMRegionAMI"
-        PMAPPHostSG : !GetAtt "MySecurityGroup.Outputs.APPHostSG"
-        PMAPPLoadBalancer: !GetAtt "MyAPPELB.Outputs.APPLoadBalancer"
-        PMS3Backup: !GetAtt "MyS3Bucket.Outputs.S3Backup"
-        PMIAMS3CWInstanceProfile: !GetAtt "MyIAMRole.Outputs.IAMS3CWInstanceProfile"
-        PMPrivateSubnets:
-          Fn::ImportValue: !Sub "${PMEnvVPC}-PrivateSubnets"
-        PMPublicSubnets:
-          Fn::ImportValue: !Sub "${PMEnvVPC}-PublicSubnets"
-        PMASMIN: !Ref "PMASMIN" # Minimum AutoScaling
-        PMASMAX: !Ref "PMASMAX" # Maximum AutoScaling
-        PMASDES: !Ref "PMASDES" # Desired AutoScaling
-        PMWEBDOMAIN: !Ref "PMWEBDOMAIN"
-
-  MyWEBELB:
-    Type: "AWS::CloudFormation::Stack"
-    Condition: "UseProdEnv"
-    DependsOn:
-    - "MyAPPAutoScaling"
-    Properties:
-      TemplateURL: !Sub "${PMTemplateURL}/wp-elb-webserver.yaml"
-      TimeoutInMinutes: '5'
-      Parameters:
-        PMServerEnv: !Ref "AWS::StackName"
-        PMCertARN: !Ref "PMCertARN"
-        PMWEBELBSG: !GetAtt "MySecurityGroup.Outputs.WEBELBSG"
-        PMPublicSubnets:
-          Fn::ImportValue: !Sub "${PMEnvVPC}-PublicSubnets"
-        PMS3Logging: !GetAtt "MyS3Bucket.Outputs.S3Logging"
-
   MyWEBAutoScaling:
     Type: "AWS::CloudFormation::Stack"
     Condition: "UseProdEnv"
-    DependsOn:
-    - "MyWEBELB"
+    # DependsOn:
+    # - "MyWEBELB"
     Properties:
-      TemplateURL: !Sub "${PMTemplateURL}/wp-autoscaling-webserver.yaml"
+      TemplateURL: !Sub "${PMTemplateURL}/wp-autoscaling-wordpress.yaml"
       TimeoutInMinutes: '5'
       Parameters:
         PMServerEnv: !Ref "AWS::StackName"
@@ -246,46 +186,131 @@ Resources:
         PMASDES: !Ref "PMASDES" # Desired AutoScaling
         PMWEBDOMAIN: !Ref "PMWEBDOMAIN"
 
-  MyCloudWatch:
-    Type: "AWS::CloudFormation::Stack"
-    Condition: "UseProdEnv"
-    DependsOn:
-    - "MyWEBAutoScaling"
-    Properties:
-      TemplateURL: !Sub "${PMTemplateURL}/wp-cloudwatch.yaml"
-      TimeoutInMinutes: '5'
-      Parameters:
-        PMWebScalingGroup: !GetAtt "MyWEBAutoScaling.Outputs.WebScalingGroup"
-        PMWebServerScaleUpPolicy: !GetAtt "MyWEBAutoScaling.Outputs.WebServerScaleUpPolicy"
-        PMWebServerScaleDownPolicy: !GetAtt "MyWEBAutoScaling.Outputs.WebServerScaleDownPolicy"
-        PMAppScalingGroup: !GetAtt "MyAPPAutoScaling.Outputs.AppScalingGroup"
-        PMAPPServerScaleUpPolicy: !GetAtt "MyAPPAutoScaling.Outputs.APPServerScaleUpPolicy"
-        PMAPPServerScaleDownPolicy: !GetAtt "MyAPPAutoScaling.Outputs.APPServerScaleDownPolicy"
+#   MyAPPELB:
+#     Type: "AWS::CloudFormation::Stack"
+#     Condition: "UseProdEnv"
+#     DependsOn:
+#     - "MyRDS"
+#     Properties:
+#       TemplateURL: !Sub "${PMTemplateURL}/wp-elb-appserver.yaml"
+#       TimeoutInMinutes: '5'
+#       Parameters:
+#         PMServerEnv: !Ref "AWS::StackName"
+#         PMAPPELBSG: !GetAtt "MySecurityGroup.Outputs.APPELBSG"
+#         PMS3Logging: !GetAtt "MyS3Bucket.Outputs.S3Logging"
+#         PMPrivateSubnets:
+#           Fn::ImportValue: !Sub "${PMEnvVPC}-PrivateSubnets"
+#         PMPublicSubnets:
+#           Fn::ImportValue: !Sub "${PMEnvVPC}-PublicSubnets"
 
-  MyDNS:
-    Type: "AWS::CloudFormation::Stack"
-    Condition: "UseProdEnv"
-    DependsOn:
-    - "MyCloudWatch"
-    Properties:
-      TemplateURL: !Sub "${PMTemplateURL}/wp-route53.yaml"
-      TimeoutInMinutes: '5'
-      Parameters:
-        PMWEBLBDNSName: !GetAtt "MyWEBELB.Outputs.WEBLBDNSName"
-        PMWEBLBHostedZoneId: !GetAtt "MyWEBELB.Outputs.WEBLBHostedZoneId"
-        PMWEBDOMAIN: !Ref "PMWEBDOMAIN"
-        PMHostedZone: !Ref "PMHostedZone"
+#   MyAPPAutoScaling:
+#     Type: "AWS::CloudFormation::Stack"
+#     Condition: "UseProdEnv"
+#     DependsOn:
+#     - "MyAPPELB"
+#     Properties:
+#       TemplateURL: !Sub "${PMTemplateURL}/wp-autoscaling-appserver.yaml"
+#       TimeoutInMinutes: '5'
+#       Parameters:
+#         PMServerEnv: !Ref "AWS::StackName"
+#         PMKeyName: !Ref "PMKeyName"
+#         PMInstanceType: !Ref "PMInstanceType"
+#         PMWordpressVer: !Ref "PMWordpressVer"
+#         PMRegionAMI: !Ref "PMRegionAMI"
+#         PMAPPHostSG : !GetAtt "MySecurityGroup.Outputs.APPHostSG"
+#         PMAPPLoadBalancer: !GetAtt "MyAPPELB.Outputs.APPLoadBalancer"
+#         PMS3Backup: !GetAtt "MyS3Bucket.Outputs.S3Backup"
+#         PMIAMS3CWInstanceProfile: !GetAtt "MyIAMRole.Outputs.IAMS3CWInstanceProfile"
+#         PMPrivateSubnets:
+#           Fn::ImportValue: !Sub "${PMEnvVPC}-PrivateSubnets"
+#         PMPublicSubnets:
+#           Fn::ImportValue: !Sub "${PMEnvVPC}-PublicSubnets"
+#         PMASMIN: !Ref "PMASMIN" # Minimum AutoScaling
+#         PMASMAX: !Ref "PMASMAX" # Maximum AutoScaling
+#         PMASDES: !Ref "PMASDES" # Desired AutoScaling
+#         PMWEBDOMAIN: !Ref "PMWEBDOMAIN"
 
-Outputs:
+#   MyWEBELB:
+#     Type: "AWS::CloudFormation::Stack"
+#     Condition: "UseProdEnv"
+#     DependsOn:
+#     - "MyAPPAutoScaling"
+#     Properties:
+#       TemplateURL: !Sub "${PMTemplateURL}/wp-elb-webserver.yaml"
+#       TimeoutInMinutes: '5'
+#       Parameters:
+#         PMServerEnv: !Ref "AWS::StackName"
+#         PMCertARN: !Ref "PMCertARN"
+#         PMWEBELBSG: !GetAtt "MySecurityGroup.Outputs.WEBELBSG"
+#         PMPublicSubnets:
+#           Fn::ImportValue: !Sub "${PMEnvVPC}-PublicSubnets"
+#         PMS3Logging: !GetAtt "MyS3Bucket.Outputs.S3Logging"
 
-  Webserver:
-    Description: "Web Server Site"
-    Value:
-      Fn::Join:
-        - ''
-        - - "https://"
-          - !Ref "PMWEBDOMAIN"
-          - "/"
+#   MyWEBAutoScaling:
+#     Type: "AWS::CloudFormation::Stack"
+#     Condition: "UseProdEnv"
+#     # DependsOn:
+#     # - "MyWEBELB"
+#     Properties:
+#       TemplateURL: !Sub "${PMTemplateURL}/wp-autoscaling-webserver.yaml"
+#       TimeoutInMinutes: '5'
+#       Parameters:
+#         PMServerEnv: !Ref "AWS::StackName"
+#         PMKeyName: !Ref "PMKeyName"
+#         PMInstanceType: !Ref "PMInstanceType"
+#         PMRegionAMI: !Ref "PMRegionAMI"
+#         MyWordpressHostSG : !GetAtt "MySecurityGroup.Outputs.MyWordpressHostSG"
+#         PMWEBLoadBalancer: !GetAtt "MyWEBELB.Outputs.WEBLoadBalancer"
+#         PMIAMS3CWInstanceProfile: !GetAtt "MyIAMRole.Outputs.IAMS3CWInstanceProfile"
+#         PMPublicSubnets:
+#           Fn::ImportValue: !Sub "${PMEnvVPC}-PublicSubnets"
+#         PMS3Backup: !GetAtt "MyS3Bucket.Outputs.S3Backup"
+#         PMAPPLoadBalancerUrl: !GetAtt "MyAPPELB.Outputs.APPLoadBalancerUrl"
+#         PMASMIN: !Ref "PMASMIN" # Minimum AutoScaling
+#         PMASMAX: !Ref "PMASMAX" # Maximum AutoScaling
+#         PMASDES: !Ref "PMASDES" # Desired AutoScaling
+#         PMWEBDOMAIN: !Ref "PMWEBDOMAIN"
+
+#   MyCloudWatch:
+#     Type: "AWS::CloudFormation::Stack"
+#     Condition: "UseProdEnv"
+#     DependsOn:
+#     - "MyWEBAutoScaling"
+#     Properties:
+#       TemplateURL: !Sub "${PMTemplateURL}/wp-cloudwatch.yaml"
+#       TimeoutInMinutes: '5'
+#       Parameters:
+#         PMWebScalingGroup: !GetAtt "MyWEBAutoScaling.Outputs.WebScalingGroup"
+#         PMWebServerScaleUpPolicy: !GetAtt "MyWEBAutoScaling.Outputs.WebServerScaleUpPolicy"
+#         PMWebServerScaleDownPolicy: !GetAtt "MyWEBAutoScaling.Outputs.WebServerScaleDownPolicy"
+#         PMAppScalingGroup: !GetAtt "MyAPPAutoScaling.Outputs.AppScalingGroup"
+#         PMAPPServerScaleUpPolicy: !GetAtt "MyAPPAutoScaling.Outputs.APPServerScaleUpPolicy"
+#         PMAPPServerScaleDownPolicy: !GetAtt "MyAPPAutoScaling.Outputs.APPServerScaleDownPolicy"
+
+#   MyDNS:
+#     Type: "AWS::CloudFormation::Stack"
+#     Condition: "UseProdEnv"
+#     DependsOn:
+#     - "MyCloudWatch"
+#     Properties:
+#       TemplateURL: !Sub "${PMTemplateURL}/wp-route53.yaml"
+#       TimeoutInMinutes: '5'
+#       Parameters:
+#         PMWEBLBDNSName: !GetAtt "MyWEBELB.Outputs.WEBLBDNSName"
+#         PMWEBLBHostedZoneId: !GetAtt "MyWEBELB.Outputs.WEBLBHostedZoneId"
+#         PMWEBDOMAIN: !Ref "PMWEBDOMAIN"
+#         PMHostedZone: !Ref "PMHostedZone"
+
+# Outputs:
+
+#   Webserver:
+#     Description: "Web Server Site"
+#     Value:
+#       Fn::Join:
+#         - ''
+#         - - "https://"
+#           - !Ref "PMWEBDOMAIN"
+#           - "/"
 
   # RDS:
   #   Description: "RDS Server EndPoint"
