@@ -179,7 +179,7 @@ Resources:
 
   MyWEBAutoScaling:
     Type: "AWS::CloudFormation::Stack"
-    # Condition: "UseProdEnv"
+    Condition: "UseProdEnv"
     # DependsOn:
     # - "MyWEBELB"
     Properties:
