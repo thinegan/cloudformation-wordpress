@@ -189,6 +189,7 @@ Resources:
         PMServerEnv: !Ref "AWS::StackName"
         PMKeyName: !Ref "PMKeyName"
         PMInstanceType: !Ref "PMInstanceType"
+        PMWordpressVer: !Ref "PMWordpressVer"
         PMRegionAMI: !Ref "PMRegionAMI"
         MyWordpressHostSG : !GetAtt "MySecurityGroup.Outputs.MyWordpressHostSG"
         PMWEBLoadBalancer: !GetAtt "MyWEBELB.Outputs.WEBLoadBalancer"

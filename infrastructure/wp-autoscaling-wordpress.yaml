@@ -35,6 +35,10 @@ Parameters:
     Description: "A reference to the Webserver domain name"
     Type: "String"
 
+  PMWordpressVer:
+    Description: "Enter an wordpress version."
+    Type: "String"
+
   PMS3Backup:
     Description: "S3 Backup Bucket Name"
     Type: "String"
@@ -92,6 +96,17 @@ Resources:
           apt-get install -y php5-fpm php5-curl php5-gd php5-mcrypt php5-mhash php5-mysql php5-xmlrpc php-gettext php5-cli php5-dev smarty3
           apt-get install -y nginx telnet git python-pip
           pip install https://s3.amazonaws.com/cloudformation-examples/aws-cfn-bootstrap-latest.tar.gz
+
+          # File don't exist (download wordpress)
+          mkdir -p /home/www/public_html
+          cd /home/www/public_html/
+          wget https://wordpress.org/wordpress-${PMWordpressVer}.tar.gz
+          tar -xf wordpress-${PMWordpressVer}.tar.gz
+          rm -rf wordpress-${PMWordpressVer}.tar.gz
+          mv wordpress ${PMWEBDOMAIN}
+          chown -R nginx:nginx /home/www/public_html/${PMWEBDOMAIN}
+          chmod -R +x /home/www/public_html/${PMWEBDOMAIN}
+          aws s3 sync --sse AES256 /home/www/public_html/${PMWEBDOMAIN}/ s3://${PMS3Backup}/
 
           /usr/local/bin/cfn-signal -e 0 -r 'server setup complete' "${WaitHandleWEB}"  > /tmp/userdata.log
 
