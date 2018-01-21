@@ -104,59 +104,59 @@ Resources:
       Handle: !Ref "WaitHandleWEB"
       Timeout: '300'
 
-#   # Auto Scaling Group Basic Setup
-#   WebScalingGroup: 
-#     Type: "AWS::AutoScaling::AutoScalingGroup"
-#     Properties:
-#       MinSize: !Ref "PMASMIN"
-#       MaxSize: !Ref "PMASMAX"
-#       DesiredCapacity: !Ref "PMASDES"
-#       LaunchConfigurationName:
-#         Ref: "LaunchConfiguration"
-#       VPCZoneIdentifier:
-#         Ref: "PMPublicSubnets"
-#       LoadBalancerNames:
-#       - Ref: "PMWEBLoadBalancer"
-#       HealthCheckGracePeriod: "300"
-#       HealthCheckType: "ELB"
-#       Tags:
-#       - Key: "Name"
-#         Value: !Sub "${PMServerEnv}-WEBserver"
-#         PropagateAtLaunch: 'true'
+  # Auto Scaling Group Basic Setup
+  WebScalingGroup: 
+    Type: "AWS::AutoScaling::AutoScalingGroup"
+    Properties:
+      MinSize: !Ref "PMASMIN"
+      MaxSize: !Ref "PMASMAX"
+      DesiredCapacity: !Ref "PMASDES"
+      LaunchConfigurationName:
+        Ref: "LaunchConfiguration"
+      VPCZoneIdentifier:
+        Ref: "PMPublicSubnets"
+      LoadBalancerNames:
+      - Ref: "PMWEBLoadBalancer"
+      HealthCheckGracePeriod: "300"
+      HealthCheckType: "ELB"
+      Tags:
+      - Key: "Name"
+        Value: !Sub "${PMServerEnv}-WEBserver"
+        PropagateAtLaunch: 'true'
 
-#   # Auto ScalingUp Policy - Basic Setup
-#   WebServerScaleUpPolicy:
-#     Type: "AWS::AutoScaling::ScalingPolicy"
-#     Properties:
-#       AdjustmentType: "ChangeInCapacity"
-#       AutoScalingGroupName:
-#         Ref: "WebScalingGroup"
-#       Cooldown: '300'
-#       ScalingAdjustment: '1'
+  # Auto ScalingUp Policy - Basic Setup
+  WebServerScaleUpPolicy:
+    Type: "AWS::AutoScaling::ScalingPolicy"
+    Properties:
+      AdjustmentType: "ChangeInCapacity"
+      AutoScalingGroupName:
+        Ref: "WebScalingGroup"
+      Cooldown: '300'
+      ScalingAdjustment: '1'
 
-#   # Auto ScalingDown Policy - Basic Setup
-#   WebServerScaleDownPolicy:
-#     Type: "AWS::AutoScaling::ScalingPolicy"
-#     Properties:
-#       AdjustmentType: "ChangeInCapacity"
-#       AutoScalingGroupName:
-#         Ref: "WebScalingGroup"
-#       Cooldown: '300'
-#       ScalingAdjustment: '-1'
+  # Auto ScalingDown Policy - Basic Setup
+  WebServerScaleDownPolicy:
+    Type: "AWS::AutoScaling::ScalingPolicy"
+    Properties:
+      AdjustmentType: "ChangeInCapacity"
+      AutoScalingGroupName:
+        Ref: "WebScalingGroup"
+      Cooldown: '300'
+      ScalingAdjustment: '-1'
 
 
-# Outputs:
+Outputs:
 
-#   WebScalingGroup: 
-#     Description: "Auto Scaling Group Reference ID"
-#     Value: !Ref "WebScalingGroup"
+  WebScalingGroup: 
+    Description: "Auto Scaling Group Reference ID"
+    Value: !Ref "WebScalingGroup"
 
-#   WebServerScaleUpPolicy: 
-#     Description: "Auto Scaling Up Policy Reference ID"
-#     Value: !Ref "WebServerScaleUpPolicy"
+  WebServerScaleUpPolicy: 
+    Description: "Auto Scaling Up Policy Reference ID"
+    Value: !Ref "WebServerScaleUpPolicy"
 
-#   WebServerScaleDownPolicy: 
-#     Description: "Auto Scaling Down Policy Reference ID"
-#     Value: !Ref "WebServerScaleDownPolicy"
+  WebServerScaleDownPolicy: 
+    Description: "Auto Scaling Down Policy Reference ID"
+    Value: !Ref "WebServerScaleDownPolicy"
 
 
