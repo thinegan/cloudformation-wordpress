@@ -179,9 +179,9 @@ Resources:
 
   MyWEBAutoScaling:
     Type: "AWS::CloudFormation::Stack"
-    Condition: "UseProdEnv"
-    # DependsOn:
-    # - "MyWEBELB"
+    # Condition: "UseProdEnv"
+    DependsOn:
+    - "MyWEBELB"
     Properties:
       TemplateURL: !Sub "${PMTemplateURL}/wp-autoscaling-wordpress.yaml"
       TimeoutInMinutes: '5'
