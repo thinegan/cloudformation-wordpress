@@ -149,7 +149,7 @@ Resources:
 
           sed -i 's/session.gc_maxlifetime = 1440/session.gc_maxlifetime = 3600/g' /etc/php5/fpm/php.ini
           sed -i 's/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/g' /etc/php5/fpm/php.ini
-          sed -i 's/;include_path = \".:\\/usr\\/share\\/php\"/include_path = \".:\\/usr\\/share\\/php:\\/usr\\/share\\/php\\/smarty3\"/g' /etc/php5/fpm/php.ini
+          # sed -i 's/;include_path = \".:\\/usr\\/share\\/php\"/include_path = \".:\\/usr\\/share\\/php:\\/usr\\/share\\/php\\/smarty3\"/g' /etc/php5/fpm/php.ini
           sed -i 's/;mbstring.language = Japanese/mbstring.language = Neutral/g' /etc/php5/fpm/php.ini
           sed -i 's/;mbstring.internal_encoding =/mbstring.internal_encoding = UTF-8/g' /etc/php5/fpm/php.ini
           sed -i 's/;mbstring.encoding_translation = Off/mbstring.encoding_translation = On/g' /etc/php5/fpm/php.ini
