@@ -163,9 +163,9 @@ Resources:
           ######################################################################
           # Create custom Nginx directory
           ######################################################################
-          mkdir -p /etc/nginx/conf.d
-          mkdir -p /etc/nginx/sites-enabled
-          mkdir -p /etc/nginx/sites-available
+          # mkdir -p /etc/nginx/conf.d
+          # mkdir -p /etc/nginx/sites-enabled
+          # mkdir -p /etc/nginx/sites-available
 
           ######################################################################
           # Configure Nginx.conf
