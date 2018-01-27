@@ -182,9 +182,9 @@ Resources:
           ######################################################################
           # Install SSL Certs
           ######################################################################
-          aws s3 cp s3://${PMPrivateKey} /etc/ssl/private/
-          aws s3 cp s3://${PMCertKey} /etc/ssl/certs/
-          aws s3 cp s3://${PMStaplingKey} /etc/ssl/certs/
+          # aws s3 cp s3://${PMPrivateKey} /etc/ssl/private/
+          # aws s3 cp s3://${PMCertKey} /etc/ssl/certs/
+          # aws s3 cp s3://${PMStaplingKey} /etc/ssl/certs/
 
           ######################################################################
           # Configure Nginx.conf
