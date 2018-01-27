@@ -35,6 +35,10 @@ Parameters:
     Description: "A reference to the Webserver domain name"
     Type: "String"
 
+  PMHostDomain:
+    Description: "Enter a server host domain."
+    Type: "String"
+
   PMWordpressVer:
     Description: "Enter an wordpress version."
     Type: "String"
@@ -126,9 +130,9 @@ Resources:
           # apt-get -q -y install mdadm --no-install-recommends
           # sudo touch /var/lib/cloud/instance/locale-check.skip
           echo 'LC_ALL="en_US.UTF-8"' >> /etc/default/locale
-          echo '${PMWEBDOMAIN}' > /etc/hostname
+          echo '${PMHostDomain}' > /etc/hostname
           # Update hostname on the fly
-          hostname ${PMWEBDOMAIN}
+          hostname ${PMHostDomain}
 
           count=$(aws s3 ls "${PMS3Backup}" | wc -l)
           if [ $count != 0 ]

@@ -48,6 +48,10 @@ Parameters:
     Description: "Enter a web domain."
     Type: "String"
 
+  PMHostDomain:
+    Description: "Enter a server host domain."
+    Type: "String"
+
   PMInstanceType: 
     Description: "Enter t2.micro or m1.small. Default is t2.micro."
     Type: "String"
@@ -217,6 +221,7 @@ Resources:
         PMASMAX: !Ref "PMASMAX" # Maximum AutoScaling
         PMASDES: !Ref "PMASDES" # Desired AutoScaling
         PMWEBDOMAIN: !Ref "PMWEBDOMAIN"
+        PMHostDomain: !Ref "PMHostDomain"
 
 #   MyAPPELB:
 #     Type: "AWS::CloudFormation::Stack"
