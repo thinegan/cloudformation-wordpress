@@ -71,6 +71,18 @@ Parameters:
     Description: "A reference to the DesiredCapacity"
     Type: "String"
 
+  PMPrivateKey:
+    Description: "SSL Private Key domain."
+    Type: "String"
+
+  PMCertKey:
+    Description: "SSL Cert Key domain."
+    Type: "String"
+
+  PMStaplingKey:
+    Description: "SSL Stapling trusted key domain."
+    Type: "String"
+
 
 Resources:
 

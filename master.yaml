@@ -100,6 +100,18 @@ Parameters:
     Description: "Db Size."
     Type: "String"
 
+  PMPrivateKey:
+    Description: "SSL Private Key domain."
+    Type: "String"
+
+  PMCertKey:
+    Description: "SSL Cert Key domain."
+    Type: "String"
+
+  PMStaplingKey:
+    Description: "SSL Stapling trusted key domain."
+    Type: "String"
+
 ###############################################################################################################
 
 ####### Condition Setup #######
@@ -179,7 +191,7 @@ Resources:
 
   MyWEBAutoScaling:
     Type: "AWS::CloudFormation::Stack"
-    # Condition: "UseProdEnv"
+    Condition: "UseProdEnv"
     DependsOn:
     - "MyWEBELB"
     Properties:
@@ -191,6 +203,9 @@ Resources:
         PMInstanceType: !Ref "PMInstanceType"
         PMWordpressVer: !Ref "PMWordpressVer"
         PMRegionAMI: !Ref "PMRegionAMI"
+        PMPrivateKey: !Ref "PMPrivateKey"
+        PMCertKey: !Ref "PMCertKey"
+        PMStaplingKey: !Ref "PMStaplingKey"
         MyWordpressHostSG : !GetAtt "MySecurityGroup.Outputs.MyWordpressHostSG"
         PMWEBLoadBalancer: !GetAtt "MyWEBELB.Outputs.WEBLoadBalancer"
         PMIAMS3CWInstanceProfile: !GetAtt "MyIAMRole.Outputs.IAMS3CWInstanceProfile"
