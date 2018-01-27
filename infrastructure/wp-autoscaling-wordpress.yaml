@@ -313,7 +313,6 @@ Resources:
           proxy_cache_valid 200 304 12h;
           proxy_cache_valid 302 301 12h;
           proxy_cache_key \$host\$uri#is_args\$args;
-
           if (\$request_filename ~* ^.*?\.(eot)|(ttf)|(woff)|(svg)|(otf)|(webm)\$){
           add_header Access-Control-Allow-Origin *;
           }
@@ -340,7 +339,7 @@ Resources:
           ln -sf /etc/nginx/sites-available/${PMWEBDOMAIN} /etc/nginx/sites-enabled/
 
           /etc/init.d/php5-fpm restart
-          /etc/init.d/nginx restart
+          # /etc/init.d/nginx restart
 
           /usr/local/bin/cfn-signal -e 0 -r 'server setup complete' "${WaitHandleWEB}"  > /tmp/userdata.log
 
