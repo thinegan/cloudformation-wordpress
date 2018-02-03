@@ -274,9 +274,9 @@ Resources:
           proxy_busy_buffers_size	256k;" > /etc/nginx/proxy.conf
 
           echo "server {
-          # server_name  ${PMWEBDOMAIN};
-          # rewrite ^ https://\$server_name\$request_uri\? permanent;
-          # }
+          server_name  ${PMWEBDOMAIN};
+          rewrite ^ https://\$server_name\$request_uri\? permanent;
+          }
 
           # server {
           # server_name ${PMWEBDOMAIN};
@@ -339,7 +339,7 @@ Resources:
           # ln -sf /etc/nginx/sites-available/${PMWEBDOMAIN} /etc/nginx/sites-enabled/
 
           /etc/init.d/php5-fpm restart
-          /etc/init.d/nginx restart
+          # /etc/init.d/nginx restart
 
           /usr/local/bin/cfn-signal -e 0 -r 'server setup complete' "${WaitHandleWEB}"  > /tmp/userdata.log
 
