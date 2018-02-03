@@ -262,9 +262,9 @@ Resources:
           ######################################################################
           echo "server {
           server_name  ${PMWEBDOMAIN};
-          # rewrite ^ https://\$server_name\$request_uri? permanent;
-          }
-          server {
+          rewrite ^ https://\$server_name\$request_uri? permanent;
+          # }
+          # server {
           # server_name ${PMWEBDOMAIN};
           # listen 443;
           # add_header Strict-Transport-Security "max-age=31536000; includeSubDomains";
@@ -280,7 +280,7 @@ Resources:
           # ssl_ciphers "ECDH+AESGCM:ECDH+AES256:ECDH+AES128:DH+3DES:RSA+3DES:!RC4:HIGH:!ADH:!AECDH:!MD5";
           # ssl_certificate /etc/ssl/certs/crytera.com.nginx.crt;
           # ssl_certificate_key /etc/ssl/private/crytera.com.key;
-          ssl_session_cache shared:SSL:10m;
+          # ssl_session_cache shared:SSL:10m;
           }" > /etc/nginx/sites-available/${PMWEBDOMAIN}
 
           ######################################################################
