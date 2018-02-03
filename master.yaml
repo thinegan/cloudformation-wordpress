@@ -338,24 +338,24 @@ Resources:
         PMWEBDOMAIN: !Ref "PMWEBDOMAIN"
         PMHostedZone: !Ref "PMHostedZone"
 
-# Outputs:
+Outputs:
 
-#   Webserver:
-#     Description: "Web Server Site"
-#     Value:
-#       Fn::Join:
-#         - ''
-#         - - "https://"
-#           - !Ref "PMWEBDOMAIN"
-#           - "/"
+  Webserver:
+    Description: "Web Server Site"
+    Value:
+      Fn::Join:
+        - ''
+        - - "https://"
+          - !Ref "PMWEBDOMAIN"
+          - "/"
 
-  # RDS:
-  #   Description: "RDS Server EndPoint"
-  #   Value:
-  #     Fn::Join:
-  #       - ''
-  #       - - "Endpoint: "
-  #         - !GetAtt "MyRDS.Outputs.RdsDbURL"
-  #         - ":"
-  #         - !GetAtt "MyRDS.Outputs.RdsDbPORT"
+  RDS:
+    Description: "RDS Server EndPoint"
+    Value:
+      Fn::Join:
+        - ''
+        - - "Endpoint: "
+          - !GetAtt "MyRDS.Outputs.RdsDbURL"
+          - ":"
+          - !GetAtt "MyRDS.Outputs.RdsDbPORT"
 
