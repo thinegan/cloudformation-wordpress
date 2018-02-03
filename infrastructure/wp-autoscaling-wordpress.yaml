@@ -285,6 +285,10 @@ Resources:
 
           root /home/www/public_html/${PMWEBDOMAIN}/;
           index index.php index.html index.htm;
+
+          location / {
+          try_files \$uri \$uri/ /index.php?\$args;
+          include proxy.conf;
           }" > /etc/nginx/sites-available/${PMWEBDOMAIN}
 
           ######################################################################
