@@ -273,10 +273,10 @@ Resources:
           proxy_buffers		4 256k;
           proxy_busy_buffers_size	256k;" > /etc/nginx/proxy.conf
 
-          echo "server {
-          server_name  ${PMWEBDOMAIN};
-          rewrite ^ https://\$server_name\$request_uri\? permanent;
-          }
+          # echo "server {
+          # server_name  ${PMWEBDOMAIN};
+          # rewrite ^ https://\$server_name\$request_uri\? permanent;
+          # }
 
           # server {
           # server_name ${PMWEBDOMAIN};
@@ -334,7 +334,7 @@ Resources:
           # allow 127.0.0.1;
           # deny all;
           # }
-          }" > /etc/nginx/sites-available/${PMWEBDOMAIN}
+          # }" > /etc/nginx/sites-available/${PMWEBDOMAIN}
 
           # ln -sf /etc/nginx/sites-available/${PMWEBDOMAIN} /etc/nginx/sites-enabled/
 
