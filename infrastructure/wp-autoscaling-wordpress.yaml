@@ -263,6 +263,8 @@ Resources:
           echo "server {
           server_name  ${PMWEBDOMAIN};
           rewrite ^ https://\$server_name\$request_uri? permanent;
+          }
+          server {
           }" > /etc/nginx/sites-available/${PMWEBDOMAIN}
 
           # echo "server {
