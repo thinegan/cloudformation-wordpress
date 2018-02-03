@@ -21,17 +21,17 @@ Parameters:
     Description: "A reference to the WebServer ScaleDownPolicy"
     Type: "String"
 
-  PMAppScalingGroup:
-    Description: "A reference to the AppServer AutoScalingGroup"
-    Type: "String"
+  # PMAppScalingGroup:
+  #   Description: "A reference to the AppServer AutoScalingGroup"
+  #   Type: "String"
 
-  PMAPPServerScaleUpPolicy:
-    Description: "A reference to the AppServer ScaleUpPolicy"
-    Type: "String"
+  # PMAPPServerScaleUpPolicy:
+  #   Description: "A reference to the AppServer ScaleUpPolicy"
+  #   Type: "String"
 
-  PMAPPServerScaleDownPolicy:
-    Description: "A reference to the AppServer ScaleDownPolicy"
-    Type: "String"
+  # PMAPPServerScaleDownPolicy:
+  #   Description: "A reference to the AppServer ScaleDownPolicy"
+  #   Type: "String"
 
 
 Resources:
@@ -75,42 +75,42 @@ Resources:
       ComparisonOperator: "GreaterThanThreshold"
 
   #  App Server Alarm High Load
-  AppCPUAlarmHigh:
-    Type: "AWS::CloudWatch::Alarm"
-    Properties:
-      AlarmDescription: "Scale-up if CPU > 80% for 5 minutes"
-      MetricName: "CPUUtilization"
-      Namespace: "AWS/EC2"
-      Statistic: "Average"
-      Period: '300'
-      EvaluationPeriods: '1'
-      Threshold: '80'
-      AlarmActions:
-      - Ref: "PMAPPServerScaleUpPolicy"
-      Dimensions:
-      - Name: "AutoScalingGroupName"
-        Value:
-          Ref: "PMAppScalingGroup"
-      ComparisonOperator: "GreaterThanThreshold"
+  # AppCPUAlarmHigh:
+  #   Type: "AWS::CloudWatch::Alarm"
+  #   Properties:
+  #     AlarmDescription: "Scale-up if CPU > 80% for 5 minutes"
+  #     MetricName: "CPUUtilization"
+  #     Namespace: "AWS/EC2"
+  #     Statistic: "Average"
+  #     Period: '300'
+  #     EvaluationPeriods: '1'
+  #     Threshold: '80'
+  #     AlarmActions:
+  #     - Ref: "PMAPPServerScaleUpPolicy"
+  #     Dimensions:
+  #     - Name: "AutoScalingGroupName"
+  #       Value:
+  #         Ref: "PMAppScalingGroup"
+  #     ComparisonOperator: "GreaterThanThreshold"
 
   # App Server Alarm Low Load
-  AppCPUAlarmLow:
-    Type: "AWS::CloudWatch::Alarm"
-    Properties:
-      AlarmDescription: "Scale-down if CPU < 25% for 5 minutes"
-      MetricName: "CPUUtilization"
-      Namespace: "AWS/EC2"
-      Statistic: "Average"
-      Period: '300'
-      EvaluationPeriods: '1'
-      Threshold: '25'
-      AlarmActions:
-      - Ref: "PMAPPServerScaleDownPolicy"
-      Dimensions:
-      - Name: "AutoScalingGroupName"
-        Value:
-          Ref: "PMAppScalingGroup"
-      ComparisonOperator: "GreaterThanThreshold"
+  # AppCPUAlarmLow:
+  #   Type: "AWS::CloudWatch::Alarm"
+  #   Properties:
+  #     AlarmDescription: "Scale-down if CPU < 25% for 5 minutes"
+  #     MetricName: "CPUUtilization"
+  #     Namespace: "AWS/EC2"
+  #     Statistic: "Average"
+  #     Period: '300'
+  #     EvaluationPeriods: '1'
+  #     Threshold: '25'
+  #     AlarmActions:
+  #     - Ref: "PMAPPServerScaleDownPolicy"
+  #     Dimensions:
+  #     - Name: "AutoScalingGroupName"
+  #       Value:
+  #         Ref: "PMAppScalingGroup"
+  #     ComparisonOperator: "GreaterThanThreshold"
 
 
 Outputs:
@@ -123,13 +123,13 @@ Outputs:
     Description: "CloudWatch Reference Web AlarmLow"
     Value: !Ref "WebCPUAlarmLow"
 
-  AppTrafficAlarmHigh: 
-    Description: "CloudWatch Reference App AlarmHigh"
-    Value: !Ref "AppCPUAlarmHigh"
+  # AppTrafficAlarmHigh: 
+  #   Description: "CloudWatch Reference App AlarmHigh"
+  #   Value: !Ref "AppCPUAlarmHigh"
 
-  AppTrafficAlarmLow: 
-    Description: "CloudWatch Reference App AlarmLow"
-    Value: !Ref "AppCPUAlarmLow"
+  # AppTrafficAlarmLow: 
+  #   Description: "CloudWatch Reference App AlarmLow"
+  #   Value: !Ref "AppCPUAlarmLow"
 
 
 
