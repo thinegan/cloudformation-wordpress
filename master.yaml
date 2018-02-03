@@ -200,7 +200,7 @@ Resources:
     - "MyWEBELB"
     Properties:
       TemplateURL: !Sub "${PMTemplateURL}/wp-autoscaling-wordpress.yaml"
-      TimeoutInMinutes: '5'
+      TimeoutInMinutes: '3'
       Parameters:
         PMServerEnv: !Ref "AWS::StackName"
         PMKeyName: !Ref "PMKeyName"
