@@ -267,7 +267,7 @@ Resources:
           server {
           server_name ${PMWEBDOMAIN};
           listen 443;
-          add_header Strict-Transport-Security "max-age=31536000; includeSubDomains";
+          add_header Strict-Transport-Security "max-age\=31536000\; includeSubDomains";
           }" > /etc/nginx/sites-available/${PMWEBDOMAIN}
 
           # echo "server {
