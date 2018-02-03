@@ -282,8 +282,8 @@ Resources:
           ssl_certificate /etc/ssl/certs/crytera.com.nginx.crt;
           ssl_certificate_key /etc/ssl/private/crytera.com.key;
           ssl_session_cache shared:SSL:10m;
-          root /home/www/public_html/${PMWEBDOMAIN}/;
-          index index.php index.html index.htm;
+          # root /home/www/public_html/${PMWEBDOMAIN}/;
+          # index index.php index.html index.htm;
           }" > /etc/nginx/sites-available/${PMWEBDOMAIN}
 
           ######################################################################
