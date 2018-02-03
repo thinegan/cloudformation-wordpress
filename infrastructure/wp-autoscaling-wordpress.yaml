@@ -273,6 +273,15 @@ Resources:
           proxy_buffers		4 256k;
           proxy_busy_buffers_size	256k;" > /etc/nginx/proxy.conf
 
+          ######################################################################
+          # Configure web virtual
+          ######################################################################
+          echo "server {
+          server_name  ${PMWEBDOMAIN};
+          rewrite ^ https://\$server_name\$request_uri? permanent;
+          }" > /etc/nginx/sites-available/${PMWEBDOMAIN}
+
+
           # echo "server {
           # server_name  ${PMWEBDOMAIN};
           # rewrite ^ https://\$server_name\$request_uri\? permanent;
