@@ -58,7 +58,7 @@ Resources:
       - LoadBalancerPort: '443'
         Protocol: "HTTPS"
         InstancePort: '443'
-        InstanceProtocol: "HTTP"
+        InstanceProtocol: "HTTPS"
         SSLCertificateId: !Ref "PMCertARN"
         PolicyNames:
         - !Sub "${PMServerEnv}-SSLNegotiationPolicy"
