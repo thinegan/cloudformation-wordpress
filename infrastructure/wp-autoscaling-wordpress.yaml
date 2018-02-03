@@ -134,34 +134,34 @@ Resources:
           # Update hostname on the fly
           hostname ${PMHostDomain}
 
-          # count=$(aws s3 ls "${PMS3Backup}" | wc -l)
-          # if [ $count != 0 ]
-          # then 
-          # # File aready exist! (sync s3 backup to site-folder)
-          # mkdir -p /home/www/public_html/${PMWEBDOMAIN}
-          # aws s3 sync s3://${PMS3Backup}/ /home/www/public_html/${PMWEBDOMAIN}/
-          # chown -R www-data:www-data /home/www/public_html/${PMWEBDOMAIN}
-          # chmod -R +x /home/www/public_html/${PMWEBDOMAIN}
-          # # Setup Crontab
-          # crontab -l | { cat; echo '*/2 * * * * aws s3 sync --sse --no-follow-symlinks /home/www/public_html/${PMWEBDOMAIN}/ s3://${PMS3Backup}/ > /dev/null 2>&1'; } | crontab -
-          # crontab -l | { cat; echo '*/3 * * * * aws s3 sync --sse s3://${PMS3Backup}/ /home/www/public_html/${PMWEBDOMAIN}/ > /dev/null 2>&1'; } | crontab -
-          # /etc/init.d/cron restart
-          # else
-          # # File don't exist (download wordpress)
-          # mkdir -p /home/www/public_html
-          # cd /home/www/public_html/
-          # wget https://wordpress.org/wordpress-${PMWordpressVer}.tar.gz
-          # tar -xf wordpress-${PMWordpressVer}.tar.gz
-          # rm -rf wordpress-${PMWordpressVer}.tar.gz
-          # mv wordpress ${PMWEBDOMAIN}
-          # chown -R www-data:www-data /home/www/public_html/${PMWEBDOMAIN}
-          # chmod -R +x /home/www/public_html/${PMWEBDOMAIN}
-          # aws s3 sync /home/www/public_html/${PMWEBDOMAIN}/ s3://${PMS3Backup}/
-          # # Setup Crontab
-          # crontab -l | { cat; echo '*/2 * * * * aws s3 sync --sse --no-follow-symlinks /home/www/public_html/${PMWEBDOMAIN}/ s3://${PMS3Backup}/ > /dev/null 2>&1'; } | crontab -
-          # crontab -l | { cat; echo '*/3 * * * * aws s3 sync --sse s3://${PMS3Backup}/ /home/www/public_html/${PMWEBDOMAIN}/ > /dev/null 2>&1'; } | crontab -
-          # /etc/init.d/cron restart
-          # fi
+          count=$(aws s3 ls "${PMS3Backup}" | wc -l)
+          if [ $count != 0 ]
+          then 
+          # File aready exist! (sync s3 backup to site-folder)
+          mkdir -p /home/www/public_html/${PMWEBDOMAIN}
+          aws s3 sync --sse s3://${PMS3Backup}/ /home/www/public_html/${PMWEBDOMAIN}/
+          chown -R www-data:www-data /home/www/public_html/${PMWEBDOMAIN}
+          chmod -R +x /home/www/public_html/${PMWEBDOMAIN}
+          # Setup Crontab
+          crontab -l | { cat; echo '*/2 * * * * aws s3 sync --sse --no-follow-symlinks /home/www/public_html/${PMWEBDOMAIN}/ s3://${PMS3Backup}/ > /dev/null 2>&1'; } | crontab -
+          crontab -l | { cat; echo '*/3 * * * * aws s3 sync --sse s3://${PMS3Backup}/ /home/www/public_html/${PMWEBDOMAIN}/ > /dev/null 2>&1'; } | crontab -
+          /etc/init.d/cron restart
+          else
+          # File don't exist (download wordpress)
+          mkdir -p /home/www/public_html
+          cd /home/www/public_html/
+          wget https://wordpress.org/wordpress-${PMWordpressVer}.tar.gz
+          tar -xf wordpress-${PMWordpressVer}.tar.gz
+          rm -rf wordpress-${PMWordpressVer}.tar.gz
+          mv wordpress ${PMWEBDOMAIN}
+          chown -R www-data:www-data /home/www/public_html/${PMWEBDOMAIN}
+          chmod -R +x /home/www/public_html/${PMWEBDOMAIN}
+          aws s3 sync --sse /home/www/public_html/${PMWEBDOMAIN}/ s3://${PMS3Backup}/
+          # Setup Crontab
+          crontab -l | { cat; echo '*/2 * * * * aws s3 sync --sse --no-follow-symlinks /home/www/public_html/${PMWEBDOMAIN}/ s3://${PMS3Backup}/ > /dev/null 2>&1'; } | crontab -
+          crontab -l | { cat; echo '*/3 * * * * aws s3 sync --sse s3://${PMS3Backup}/ /home/www/public_html/${PMWEBDOMAIN}/ > /dev/null 2>&1'; } | crontab -
+          /etc/init.d/cron restart
+          fi
 
           # # Update php config
           # sed -i 's/session.gc_maxlifetime = 1440/session.gc_maxlifetime = 3600/g' /etc/php5/fpm/php.ini
