@@ -265,7 +265,7 @@ Resources:
           rewrite ^ https://\$server_name\$request_uri? permanent;
           }" > /etc/nginx/sites-available/${PMWEBDOMAIN}
 
-          echo "server {
+          # echo "server {
           # server_name ${PMWEBDOMAIN};
           # listen 443;
           # add_header Strict-Transport-Security "max-age=31536000; includeSubDomains";
@@ -282,7 +282,7 @@ Resources:
           # ssl_certificate /etc/ssl/certs/crytera.com.nginx.crt;
           # ssl_certificate_key /etc/ssl/private/crytera.com.key;
           # ssl_session_cache shared:SSL:10m;
-          }" >> /etc/nginx/sites-available/${PMWEBDOMAIN}
+          # }" >> /etc/nginx/sites-available/${PMWEBDOMAIN}
 
           ######################################################################
           # Configure proxy.conf
@@ -377,7 +377,7 @@ Resources:
     Type: "AWS::CloudFormation::WaitCondition"
     Properties:
       Handle: !Ref "WaitHandleWEB"
-      Timeout: '200'
+      Timeout: '240'
 
   # Auto Scaling Group Basic Setup
   WebScalingGroup: 
