@@ -195,7 +195,7 @@ Resources:
 
   MyWEBAutoScaling:
     Type: "AWS::CloudFormation::Stack"
-    Condition: "UseProdEnv"
+    # Condition: "UseProdEnv"
     DependsOn:
     - "MyWEBELB"
     Properties:
@@ -228,8 +228,8 @@ Resources:
   MyCloudWatch:
     Type: "AWS::CloudFormation::Stack"
     # Condition: "UseProdEnv"
-    # DependsOn:
-    # - "MyWEBAutoScaling"
+    DependsOn:
+    - "MyWEBAutoScaling"
     Properties:
       TemplateURL: !Sub "${PMTemplateURL}/wp-cloudwatch.yaml"
       TimeoutInMinutes: '5'
