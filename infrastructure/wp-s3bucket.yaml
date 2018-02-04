@@ -50,12 +50,6 @@ Resources:
       Bucket: !Ref "S3Backup"
       PolicyDocument:
         Statement:
-        # - Sid: "AllowObjectUploads"
-        #   Effect: "Allow"
-        #   Action: "s3:PutObject"
-        #   Resource: !Join ["", ["arn:aws:s3:::", !Ref "S3Backup", "/*"]]
-        #   Principal:
-        #     AWS: "*"
         - Sid: "DenyUnEncryptedObjectUploads"
           Effect: "Deny"
           Principal:
@@ -101,13 +95,6 @@ Resources:
           Principal:
             AWS: "*"
 
-        # Statement:
-        # - Sid: "AllowLogsObjectUploads"
-        #   Effect: "Allow"
-        #   Action: "s3:PutObject"
-        #   Resource: !Join ["", ["arn:aws:s3:::", !Ref "S3Logging", "/*"]]
-        #   Principal:
-        #     AWS: "*"
 Outputs:
 
   S3Backup:

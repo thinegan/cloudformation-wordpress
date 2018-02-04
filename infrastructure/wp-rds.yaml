@@ -78,7 +78,6 @@ Parameters:
 Conditions: 
   UseProdEnv: !Equals [ !Ref "PMServerEnv", "prod" ]
 
-
 Resources:
 
   Database:
@@ -102,7 +101,6 @@ Resources:
       DBSubnetGroupDescription: !Sub "${PMServerEnv} RDS DB subnet group"
       SubnetIds:
         Ref: "PMPrivateSubnets"
-
 
 Outputs:
 
@@ -129,6 +127,3 @@ Outputs:
   DbPassword:
     Description: "RDS Database admin account password"
     Value: !Ref "DatabasePassword"
-
-
-

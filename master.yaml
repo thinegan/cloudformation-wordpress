@@ -215,8 +215,6 @@ Resources:
         PMIAMS3CWInstanceProfile: !GetAtt "MyIAMRole.Outputs.IAMS3CWInstanceProfile"
         PMPrivateSubnets:
           Fn::ImportValue: !Sub "${PMEnvVPC}-PrivateSubnets"
-        # PMPublicSubnets:
-        #   Fn::ImportValue: !Sub "${PMEnvVPC}-PublicSubnets"
         PMS3Backup: !GetAtt "MyS3Bucket.Outputs.S3Backup"
         PMAPPLoadBalancerUrl: !GetAtt "MyWEBELB.Outputs.WEBLBDNSName"
         PMASMIN: !Ref "PMASMIN" # Minimum AutoScaling
