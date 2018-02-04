@@ -1,4 +1,4 @@
-# VPC with private and public subnets in two Availability Zones
+# Deploying Multi-AZ and Self-Healing Wordpress with Backup to S3 sync
 
 This reference architecture provides a set of YAML templates for deploying the following AWS services :
 - Amazon IAM
@@ -18,16 +18,7 @@ Before you can deploy this process, you need the following:
 
 This template describes a VPC with two private and two public subnets.
 
-![infrastructure-overview](images/VPC_with_private_and_public_subnets_in_two_Availability_Zones.png)
-
-### Installation Guide
-1. [![Launch Stack](https://cdn.rawgit.com/buildkite/cloudformation-launch-stack-button-svg/master/launch-stack.svg)](https://console.aws.amazon.com/cloudformation/home#/stacks/new?stackName=devVPC&templateURL=https://s3.amazonaws.com/cf-templates-hyv79l0oex7c-us-east-1/cloudformation-vpc/master.yaml)
-2. Click Next to proceed with the next step of the wizard.
-3. Specify a name and all parameters for the stack.
-4. Click Next to proceed with the next step of the wizard.
-5. Click Next to skip the Options step of the wizard.
-6. Click Create to start the creation of the stack.
-7. Wait until the stack reaches the state CREATE_COMPLETE
+![infrastructure-overview](images/Multi-AZ_and_Self-Healing_Wordpress.png)
 
 The repository consists of a set of nested templates that deploy the following:
 
@@ -56,10 +47,9 @@ The templates below are included in this repository and reference architecture:
 | Template | Description |
 | --- | --- | 
 | [master.yaml](master.yaml) | This is the master template - deploy it to CloudFormation and it includes all of the nested templates automatically. |
-| [infrastructure/vpc-iam.yaml](infrastructure/vpc-iam.yaml) | This template deploys will create policy to allow EC2 instance full access to S3 & CloudWatch, and VPC Logs to CloudWatch. |
-| [infrastructure/vpc-s3bucket.yaml](infrastructure/vpc-s3bucket.yaml) | This template deploys Backup Data Bucket with security data at rest and archive objects greater than 60 days, and ELB logging. |
-| [infrastructure/vpc-vpc.yaml](infrastructure/vpc-vpc.yaml) | This template deploys a VPC with a pair of public and private subnets spread across two Availability Zones. It deploys an [Internet gateway](http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Internet_Gateway.html), with a default route on the public subnets. It deploys 2 [NAT gateways](http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/vpc-nat-comparison.html), and default routes for them in the private subnets. |
-| [infrastructure/vpc-nacl.yaml](infrastructure/vpc-nacl.yaml) | [Network ACLs](http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_ACLs.html) required by the entire stack. |
+| [infrastructure/wp-iam.yaml](infrastructure/wp-iam.yaml) | This template deploys will create policy to allow EC2 instance full access to S3 & CloudWatch, and VPC Logs to CloudWatch. |
+| [infrastructure/wp-s3bucket.yaml](infrastructure/wp-s3bucket.yaml) | This template deploys Backup Data Bucket with security data at rest and archive objects greater than 60 days, and ELB logging. |
+| [infrastructure/wp-securitygroup.yaml](infrastructure/wp-securitygroup.yaml) | This template deploys a VPC with a pair of public and private subnets spread across two Availability Zones. It 
 
 After the CloudFormation templates have been deployed, the [stack outputs](http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/outputs-section-structure.html) contain a link to the site URLs.
 
@@ -159,6 +149,6 @@ Thinegan Ratnam
 
 ## Copyright and License
 
-Copyright 2017 Thinegan Ratnam
+Copyright 2018 Thinegan Ratnam
 
 Code released under the MIT License.
