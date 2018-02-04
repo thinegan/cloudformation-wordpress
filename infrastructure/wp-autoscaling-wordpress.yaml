@@ -23,7 +23,11 @@ Parameters:
     Description: "Enter t2.micro or m1.small. Default is t2.micro."
     Type: "String"
 
-  PMPublicSubnets:
+  # PMPublicSubnets:
+  #   Description: "Subnets to launch instances into"
+  #   Type: "List<AWS::EC2::Subnet::Id>"
+
+  PMPrivateSubnets:
     Description: "Subnets to launch instances into"
     Type: "List<AWS::EC2::Subnet::Id>"
 
@@ -365,7 +369,8 @@ Resources:
       LaunchConfigurationName:
         Ref: "LaunchConfiguration"
       VPCZoneIdentifier:
-        Ref: "PMPublicSubnets"
+        Ref: "PMPrivateSubnets"
+        # Ref: "PMPublicSubnets"
       LoadBalancerNames:
       - Ref: "PMWEBLoadBalancer"
       HealthCheckGracePeriod: "300"
