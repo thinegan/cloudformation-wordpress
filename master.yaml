@@ -193,36 +193,6 @@ Resources:
           Fn::ImportValue: !Sub "${PMEnvVPC}-PublicSubnets"
         PMS3Logging: !GetAtt "MyS3Bucket.Outputs.S3Logging"
 
-  # MyWEBAutoScaling:
-  #   Type: "AWS::CloudFormation::Stack"
-  #   # Condition: "UseProdEnv"
-  #   DependsOn:
-  #   - "MyWEBELB"
-  #   Properties:
-  #     TemplateURL: !Sub "${PMTemplateURL}/wp-autoscaling-wordpress.yaml"
-  #     TimeoutInMinutes: '4'
-  #     Parameters:
-  #       PMServerEnv: !Ref "AWS::StackName"
-  #       PMKeyName: !Ref "PMKeyName"
-  #       PMInstanceType: !Ref "PMInstanceType"
-  #       PMWordpressVer: !Ref "PMWordpressVer"
-  #       PMRegionAMI: !Ref "PMRegionAMI"
-  #       PMPrivateKey: !Ref "PMPrivateKey"
-  #       PMCertKey: !Ref "PMCertKey"
-  #       PMStaplingKey: !Ref "PMStaplingKey"
-  #       MyWordpressHostSG : !GetAtt "MySecurityGroup.Outputs.MyWordpressHostSG"
-  #       PMWEBLoadBalancer: !GetAtt "MyWEBELB.Outputs.WEBLoadBalancer"
-  #       PMIAMS3CWInstanceProfile: !GetAtt "MyIAMRole.Outputs.IAMS3CWInstanceProfile"
-  #       PMPublicSubnets:
-  #         Fn::ImportValue: !Sub "${PMEnvVPC}-PublicSubnets"
-  #       PMS3Backup: !GetAtt "MyS3Bucket.Outputs.S3Backup"
-  #       PMAPPLoadBalancerUrl: !GetAtt "MyWEBELB.Outputs.WEBLBDNSName"
-  #       PMASMIN: !Ref "PMASMIN" # Minimum AutoScaling
-  #       PMASMAX: !Ref "PMASMAX" # Maximum AutoScaling
-  #       PMASDES: !Ref "PMASDES" # Desired AutoScaling
-  #       PMWEBDOMAIN: !Ref "PMWEBDOMAIN"
-  #       PMHostDomain: !Ref "PMHostDomain"
-
   MyWEBAutoScaling:
     Type: "AWS::CloudFormation::Stack"
     Condition: "UseProdEnv"
