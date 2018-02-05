@@ -55,6 +55,11 @@ After the CloudFormation templates have been deployed, the [stack outputs](http:
 
 ![stack-outputs](images/stack-outputs.png)
 
+![bamboo-variable1](images/bamboo_var1.png)
+
+![bamboo-variable2](images/bamboo_var2.png)
+
+
 ## How do I...?
 
 ### Get started and deploy this into my AWS account
